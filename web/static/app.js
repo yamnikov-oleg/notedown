@@ -113,7 +113,7 @@ new Vue({
     },
 
     save: function () {
-      if (this.editingNew()) {
+      if (this.editingNew() && this.editedNote.text.trim() != "") {
         this.create(this.editedNote);
         this.selection = "old";
       } else if (this.editingOld()) {
