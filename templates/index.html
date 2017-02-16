@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Notedown WIP</title>
+  </head>
+  <body>
+
+    <ul>
+      {% for note in notes %}
+      <li><a href="{{ url_for('index', edit=note.id) }}">{{ note.text }}</a></li>
+      {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('index') }}">Новая заметка</a>
+
+    <form action="{{ url_for('save') }}" method="post">
+      {% if edit_note %}
+      <input type="hidden" name="id" value="{{ edit_note.id }}">
+      {% endif %}
+      <textarea name="text" rows="8" cols="80">{{ edit_note.text }}</textarea>
+      <input type="submit" name="submit" value="Сохранить">
+    </form>
+
+    {% if edit_note %}
+    <form action="{{ url_for('delete') }}" method="post">
+      <input type="hidden" name="id" value="{{ edit_note.id }}">
+      <input type="submit" name="submit" value="Удалить">
+    </form>
+    {% endif %}
+
+  </body>
+</html>
