@@ -135,17 +135,6 @@ new Vue({
       }
     }, 500),
 
-    deleteEdited: function () {
-      if (this.editingOld()) {
-        this.delete(this.editedNote);
-      }
-
-      var delIndex = this.notes.indexOf(this.editedNote);
-      if (delIndex >= 0) this.notes.splice(delIndex, 1);
-
-      this.selectNone();
-    },
-
     refresh: function () {
       var self = this;
       callAPI('GET', '/api/v1/notes', null, function (json) {
@@ -188,7 +177,11 @@ new Vue({
         });
     },
 
-    delete: function (note) {
+    remove: function (note) {
+      var delIndex = this.notes.indexOf(note);
+      if (delIndex >= 0) this.notes.splice(delIndex, 1);
+      if (this.editedNote == note) this.selectNone();
+
       // Note will not have assigned id, if it's never been saved.
       if (!note.id) {
         return;

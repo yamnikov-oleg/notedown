@@ -30,7 +30,7 @@
           <div class="toolbar" v-if="noteSelected()">
             <button v-on:click="closeEdited">Закрыть</button>
             <div class="spacer"></div>
-            <button v-on:click="deleteEdited">Удалить</button>
+            <button v-on:click="remove(editedNote)">Удалить</button>
           </div>
         </div>
         <textarea v-if="noteSelected()" v-model="editedNote.text" v-on:input="saveDebounced"></textarea>
