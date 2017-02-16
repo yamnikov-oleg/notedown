@@ -86,6 +86,9 @@ new Vue({
     },
 
     closeEdited: function () {
+      if (this.editingNew() && this.editedNoteEmpty()) {
+        this.remove(this.editedNote);
+      }
       this.save();
       this.selectNone();
     },
