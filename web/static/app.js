@@ -101,7 +101,7 @@ new Vue({
     select: function (note) {
       this.save();
       this.editedNote = note;
-      this.selection = "old";
+      this.selection = (note.id ? "old" : "new");
     },
 
     isSelected: function (note) {
