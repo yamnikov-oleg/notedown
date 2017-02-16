@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Notedown WIP</title>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <script type="text/x-template" id="note-item">
+      <li v-on:click="$emit('click')" v-bind:style="{ fontWeight: (selected ? 'bold' : 'normal') }">{{ note.text }}</li>
+    </script>
+    <div id="app">
+      <button v-on:click="newNote">Новая заметка</button>
+      <button v-on:click="refresh">Обновить</button>
+      <ul>
+        <note-item v-for="note in notes" v-bind:note="note" v-on:click="select(note)"
+                   v-bind:selected="isSelected(note)"></note-item>
+      </ul>
+      <div v-if="noteSelected()">
+        <textarea v-model="editedNote.text" v-on:input="saveDebounced"></textarea>
+        <button v-on:click="deleteEdited">Удалить</button>
+      </div>
+    </div>
+    <script src="/static/underscore-min.js"></script>
+    <script src="/static/fetch/fetch.js"></script>
+    <script src="/static/app.js"></script>
+  </body>
+</html>
