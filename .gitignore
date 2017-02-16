@@ -95,3 +95,8 @@ ENV/
 .ropeproject
 
 # End of https://www.gitignore.io/api/python
+
+# Sqlite database files
+*.db
+*.sqlite
+*.sqlite3
