@@ -81,6 +81,11 @@ new Vue({
       return this.selection == "old";
     },
 
+    closeEdited: function () {
+      this.save();
+      this.selectNone();
+    },
+
     selectNone: function () {
       this.editedNote = null;
       this.selection = "none";

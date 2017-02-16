@@ -3,24 +3,41 @@
   <head>
     <meta charset="utf-8">
     <title>Notedown WIP</title>
+    <link rel="stylesheet" href="/static/style.css">
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
   </head>
   <body>
     <script type="text/x-template" id="note-item">
-      <li v-on:click="$emit('click')" v-bind:style="{ fontWeight: (selected ? 'bold' : 'normal') }">{{ note.text }}</li>
+      <li v-on:click="$emit('click')" v-bind:class="{ selected: selected }">{{ note.text }}</li>
     </script>
+
     <div id="app">
-      <button v-on:click="newNote">Новая заметка</button>
-      <button v-on:click="refresh">Обновить</button>
-      <ul>
-        <note-item v-for="note in notes" v-bind:note="note" v-on:click="select(note)"
-                   v-bind:selected="isSelected(note)"></note-item>
-      </ul>
-      <div v-if="noteSelected()">
-        <textarea v-model="editedNote.text" v-on:input="saveDebounced"></textarea>
-        <button v-on:click="deleteEdited">Удалить</button>
-      </div>
+
+      <aside>
+        <div class="toolbar">
+          <button v-on:click="newNote">Новая заметка</button>
+          <div class="spacer"></div>
+          <button v-on:click="refresh">Обновить</button>
+        </div>
+        <ul>
+          <note-item v-for="note in notes" v-bind:note="note" v-on:click="select(note)"
+                     v-bind:selected="isSelected(note)"></note-item>
+        </ul>
+      </aside>
+
+      <main>
+        <div class="toolbar-wrap">
+          <div class="toolbar" v-if="noteSelected()">
+            <button v-on:click="closeEdited">Закрыть</button>
+            <div class="spacer"></div>
+            <button v-on:click="deleteEdited">Удалить</button>
+          </div>
+        </div>
+        <textarea v-if="noteSelected()" v-model="editedNote.text" v-on:input="saveDebounced"></textarea>
+      </main>
+
     </div>
+
     <script src="/static/underscore-min.js"></script>
     <script src="/static/fetch/fetch.js"></script>
     <script src="/static/app.js"></script>
