@@ -1,3 +1,52 @@
+// Performs ajax request to the given api.
+// * method -  string;
+// * url -     string;
+// * data -    object (map), optional;
+// * success - function(json),
+//             where json is an object.
+// * fail -    function(statusCode, msg),
+//             statusCode is a number and
+//             msg is a string or null.
+function callAPI(method, url, data, success, fail) {
+  var successWrapped = function (json) {
+    if (success) success(json);
+  }
+  var failWrapped = function (code, msg) {
+    if (fail) fail(code, msg);
+  }
+
+  var options = {
+    method: method,
+  }
+
+  if (data) {
+    var formData = new FormData();
+    _.each(data, function (value, key) {
+      formData.append(key, value);
+    });
+    options.body = formData;
+  }
+
+  var status;
+  fetch(url, options)
+    .then(function (response) {
+      status = response.status;
+      return response.json();
+    }, function (error) {
+      failWrapped(0, error.toString());
+    })
+    .then(function (json) {
+      if (status >= 200 && status <= 299) {
+        successWrapped(json);
+      } else {
+        failWrapped(status, json.message);
+      }
+    }, function (error) {
+      failWrapped(status, error.toString());
+    });
+}
+
+
 Vue.component('note-item', {
   props: ['note', 'selected'],
   template: '#note-item',
@@ -19,40 +68,6 @@ new Vue({
   },
 
   methods: {
-
-    refresh: function () {
-      var self = this;
-      var handleError = function (error) {
-        console.error("Error loading notes: " + error);
-      }
-
-      fetch("/api/v1/notes")
-        .then(function (response) {
-          if (response.ok) {
-            return response.json()
-          } else {
-            var error = new Error(response.statusText);
-            error.response = response;
-            throw error;
-          }
-        }, handleError)
-        .then(function (json) {
-          self.notes = json;
-
-          if (self.editingOld()) {
-            for (i in self.notes) {
-              if (self.notes[i].id == self.editedNote.id) {
-                self.editedNote = self.notes[i];
-                break;
-              }
-            }
-          }
-
-          if (self.editingNew()) {
-            self.notes.unshift(self.editedNote);
-          }
-        }, handleError);
-    },
 
     noteSelected: function () {
       return this.selection == "new" || this.selection == "old";
@@ -109,6 +124,7 @@ new Vue({
     saveDebounced: _.debounce(function () {
       if (this.editingNew()) {
         this.create(this.editedNote);
+        this.selection = "old";
       } else if (this.editingOld()) {
         this.update(this.editedNote);
       }
@@ -125,97 +141,58 @@ new Vue({
       this.selectNone();
     },
 
-    update: function (note) {
-      var handleError = function (error) {
-        console.error("Error updating note " + note.id + ": " + error);
-      }
+    refresh: function () {
+      var self = this;
+      callAPI('GET', '/api/v1/notes', null, function (json) {
+        self.notes = json;
 
-      // Note will not have assigned id, if it's never been saved.
-      if (!note.id) {
-        return;
-      }
-
-      var data = new FormData();
-      data.append('id', note.id);
-      data.append('text', note.text);
-
-      var statusText;
-      fetch('/api/v1/update', {
-        method: 'POST',
-        body: data,
-      })
-        .then(function (response) {
-          if (!response.ok) {
-            statusText = response.statusText;
-            return response.json();
-          } else {
-            return null;
+        if (self.editingOld()) {
+          for (i in self.notes) {
+            if (self.notes[i].id == self.editedNote.id) {
+              self.editedNote = self.notes[i];
+              break;
+            }
           }
-        }, handleError)
-        .then(function (json) {
-          if (json) {
-            handleError(statusText + " - " + json.message);
-          }
-        }, handleError);
+        }
+
+        if (self.editingNew()) {
+          self.notes.unshift(self.editedNote);
+        }
+      }, function (code, msg) {
+        console.error("Error loading notes: " + code + " - " + msg);
+      });
     },
 
     create: function (note) {
-      var handleError = function (error) {
-        console.error("Error creating note " + note.id + ": " + error);
-      }
-
-      var data = new FormData();
-      data.append('text', note.text);
-
-      var failStatusText;
-      fetch('/api/v1/create', {
-        method: 'POST',
-        body: data,
-      })
-        .then(function (response) {
-          if (!response.ok) {
-            failStatusText = response.statusText;
-          }
-          return response.json();
-        }, handleError)
-        .then(function (json) {
-          if (failStatusText) {
-            throw new Error(failStatusText + " - " + json.message);
-          } else {
-            note.id = json.id;
-          }
-        }, handleError);
+      callAPI('POST', '/api/v1/create', { text: note.text }, function (json) {
+        note.id = json.id;
+      }, function (code, msg) {
+        console.error("Error creating note: " + code + " - " + msg);
+      });
     },
 
-    delete: function (note) {
-      var handleError = function (error) {
-        console.error("Error deleting note " + note.id + ": " + error);
-      }
-
+    update: function (note) {
       // Note will not have assigned id, if it's never been saved.
       if (!note.id) {
         return;
       }
 
-      var data = new FormData();
-      data.append('id', note.id);
+      callAPI('POST', '/api/v1/update', { id: note.id, text: note.text }, null,
+        function (code, msg) {
+          console.error("Error updating note " + note.id + ": " + code + " - " + msg);
+        });
+    },
 
-      var failStatusText;
-      fetch('/api/v1/delete', {
-        method: 'POST',
-        body: data,
-      })
-        .then(function (response) {
-          if (!response.ok) {
-            failStatusText = response.statusText;
-          }
-          return response.json();
-        }, handleError)
-        .then(function (json) {
-          if (failStatusText) {
-            throw new Error(failStatusText + " - " + json.message);
-          }
-        }, handleError);
+    delete: function (note) {
+      // Note will not have assigned id, if it's never been saved.
+      if (!note.id) {
+        return;
+      }
+
+      callAPI('POST', '/api/v1/delete', { id: note.id }, null,
+        function (code, msg) {
+          console.error("Error deleting note " + note.id + ": " + code + " - " + msg);
+        });
     },
 
   },
