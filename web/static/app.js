@@ -81,6 +81,10 @@ new Vue({
       return this.selection == "old";
     },
 
+    editedNoteEmpty: function () {
+      return this.editedNote.text.trim() == "";
+    },
+
     closeEdited: function () {
       this.save();
       this.selectNone();
@@ -102,7 +106,7 @@ new Vue({
     },
 
     newNote: function () {
-      if (this.editingNew() && this.editedNote.text.trim() == "") {
+      if (this.editingNew() && this.editedNoteEmpty()) {
         return;
       }
 
@@ -118,7 +122,7 @@ new Vue({
     },
 
     save: function () {
-      if (this.editingNew() && this.editedNote.text.trim() != "") {
+      if (this.editingNew() && !this.editedNoteEmpty()) {
         this.create(this.editedNote);
         this.selection = "old";
       } else if (this.editingOld()) {
