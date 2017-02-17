@@ -21,7 +21,7 @@ def notes():
     ]
     return jsonify(notes_data)
 
-@apiv1.route('/update', methods=['POST'])
+@apiv1.route('/notes/update', methods=['POST'])
 def update():
     nid = request.form.get('id')
     if not nid:
@@ -40,7 +40,7 @@ def update():
     note.save()
     return jsonify(message="ok")
 
-@apiv1.route('/create', methods=['POST'])
+@apiv1.route('/notes/create', methods=['POST'])
 def create():
     text = request.form.get('text')
     if text is None:
@@ -49,7 +49,7 @@ def create():
     note = Note.create(text=text)
     return jsonify(id=note.id, message="ok")
 
-@apiv1.route('/delete', methods=['POST'])
+@apiv1.route('/notes/delete', methods=['POST'])
 def delete():
     nid = request.form.get('id')
     if not nid:

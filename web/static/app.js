@@ -49,17 +49,17 @@ var NotedownAPI = (function () {
 
   return {
     _call: call,
-    notes: function (success, fail) {
+    index: function (success, fail) {
       call('GET', '/api/v1/notes', null, success, fail);
     },
     create: function (note, success, fail) {
-      call('POST', '/api/v1/create', { text: note.text }, success, fail);
+      call('POST', '/api/v1/notes/create', { text: note.text }, success, fail);
     },
     update: function (note, success, fail) {
-      call('POST', '/api/v1/update', { id: note.id, text: note.text }, success, fail);
+      call('POST', '/api/v1/notes/update', { id: note.id, text: note.text }, success, fail);
     },
     delete: function (note, success, fail) {
-      call('POST', '/api/v1/delete', { id: note.id }, success, fail);
+      call('POST', '/api/v1/notes/delete', { id: note.id }, success, fail);
     },
   };
 })();
@@ -161,7 +161,7 @@ new Vue({
 
     refresh: function () {
       var self = this;
-      NotedownAPI.notes(function (json) {
+      NotedownAPI.index(function (json) {
         self.notes = json;
 
         if (self.editingOld()) {
