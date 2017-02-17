@@ -1,51 +1,68 @@
-// Performs ajax request to the given api.
-// * method -  string;
-// * url -     string;
-// * data -    object (map), optional;
-// * success - function(json),
-//             where json is an object.
-// * fail -    function(statusCode, msg),
-//             statusCode is a number and
-//             msg is a string or null.
-function callAPI(method, url, data, success, fail) {
-  var successWrapped = function (json) {
-    if (success) success(json);
-  }
-  var failWrapped = function (code, msg) {
-    if (fail) fail(code, msg);
+var NotedownAPI = (function () {
+  // Performs ajax request to the given api.
+  // * method -  string;
+  // * url -     string;
+  // * data -    object (map), optional;
+  // * success - function(json),
+  //             where json is an object.
+  // * fail -    function(statusCode, msg),
+  //             statusCode is a number and
+  //             msg is a string or null.
+  function call(method, url, data, success, fail) {
+    var successWrapped = function (json) {
+      if (success) success(json);
+    }
+    var failWrapped = function (code, msg) {
+      if (fail) fail(code, msg);
+    }
+
+    var options = {
+      method: method,
+    }
+
+    if (data) {
+      var formData = new FormData();
+      _.each(data, function (value, key) {
+        formData.append(key, value);
+      });
+      options.body = formData;
+    }
+
+    var status;
+    fetch(url, options)
+      .then(function (response) {
+        status = response.status;
+        return response.json();
+      }, function (error) {
+        failWrapped(0, error.toString());
+      })
+      .then(function (json) {
+        if (status >= 200 && status <= 299) {
+          successWrapped(json);
+        } else {
+          failWrapped(status, json.message);
+        }
+      }, function (error) {
+        failWrapped(status, error.toString());
+      });
   }
 
-  var options = {
-    method: method,
-  }
-
-  if (data) {
-    var formData = new FormData();
-    _.each(data, function (value, key) {
-      formData.append(key, value);
-    });
-    options.body = formData;
-  }
-
-  var status;
-  fetch(url, options)
-    .then(function (response) {
-      status = response.status;
-      return response.json();
-    }, function (error) {
-      failWrapped(0, error.toString());
-    })
-    .then(function (json) {
-      if (status >= 200 && status <= 299) {
-        successWrapped(json);
-      } else {
-        failWrapped(status, json.message);
-      }
-    }, function (error) {
-      failWrapped(status, error.toString());
-    });
-}
-
+  return {
+    _call: call,
+    notes: function (success, fail) {
+      call('GET', '/api/v1/notes', null, success, fail);
+    },
+    create: function (note, success, fail) {
+      call('POST', '/api/v1/create', { text: note.text }, success, fail);
+    },
+    update: function (note, success, fail) {
+      call('POST', '/api/v1/update', { id: note.id, text: note.text }, success, fail);
+    },
+    delete: function (note, success, fail) {
+      call('POST', '/api/v1/delete', { id: note.id }, success, fail);
+    },
+  };
+})();
 
 Vue.component('note-item', {
   props: ['note', 'selected'],
@@ -144,7 +161,7 @@ new Vue({
 
     refresh: function () {
       var self = this;
-      callAPI('GET', '/api/v1/notes', null, function (json) {
+      NotedownAPI.notes(function (json) {
         self.notes = json;
 
         if (self.editingOld()) {
@@ -165,7 +182,7 @@ new Vue({
     },
 
     create: function (note) {
-      callAPI('POST', '/api/v1/create', { text: note.text }, function (json) {
+      NotedownAPI.create(note, function (json) {
         note.id = json.id;
       }, function (code, msg) {
         console.error("Error creating note: " + code + " - " + msg);
@@ -178,10 +195,9 @@ new Vue({
         return;
       }
 
-      callAPI('POST', '/api/v1/update', { id: note.id, text: note.text }, null,
-        function (code, msg) {
-          console.error("Error updating note " + note.id + ": " + code + " - " + msg);
-        });
+      NotedownAPI.update(note, null, function (code, msg) {
+        console.error("Error updating note " + note.id + ": " + code + " - " + msg);
+      });
     },
 
     remove: function (note) {
@@ -194,10 +210,9 @@ new Vue({
         return;
       }
 
-      callAPI('POST', '/api/v1/delete', { id: note.id }, null,
-        function (code, msg) {
-          console.error("Error deleting note " + note.id + ": " + code + " - " + msg);
-        });
+      NotedownAPI.delete(note, null, function (code, msg) {
+        console.error("Error deleting note " + note.id + ": " + code + " - " + msg);
+      });
     },
 
   },
