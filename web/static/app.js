@@ -50,7 +50,9 @@ var NotedownAPI = (function () {
   return {
     _call: call,
     index: function (success, fail) {
-      call('GET', '/api/v1/notes', null, success, fail);
+      call('GET', '/api/v1/notes', null, function (json) {
+        success(json.map(function (n) { return new Note(n); }));
+      }, fail);
     },
     create: function (note, success, fail) {
       call('POST', '/api/v1/notes/create', { text: note.text }, success, fail);
@@ -64,6 +66,78 @@ var NotedownAPI = (function () {
   };
 })();
 
+var Note = function (fields) {
+  if (!fields) {
+    fields = {
+      id: null,
+      text: "",
+    }
+  }
+
+  this.id = fields.id;
+  this.text = fields.text;
+  this.isBeingSaved = false;
+  this.isBeingDeleted = false;
+}
+
+Note.prototype.is = function (other) {
+  if (!other) return false;
+  if (this == other) return true;
+  if (this.isNew() || other.isNew()) return false;
+  if (this.id == other.id) return true;
+  return false;
+}
+
+Note.prototype.isNew = function () {
+  // undefined id means note was never saved
+  return !this.id;
+};
+
+Note.prototype.isEmpty = function () {
+  // undefined id means note was never saved
+  return this.text.trim() == "";
+};
+
+Note.prototype.save = function () {
+  if (this.isBeingSaved || this.isBeingDeleted) return;
+  this.isBeingSaved = true;
+
+  if (this.isNew()) {
+    var _this = this;
+    NotedownAPI.create(this, function (json) {
+      _this.id = json.id;
+      _this.isBeingSaved = false;
+    }, function (code, msg) {
+      console.log("Error creating note: " + code + " - " + msg);
+      _this.isBeingSaved = false;
+    });
+  } else {
+    var _this = this;
+    NotedownAPI.update(this, function (json) {
+      _this.isBeingSaved = false;
+    }, function (code, msg) {
+      console.log("Error updating note " + _this.id + ": " + code + " - " + msg);
+      _this.isBeingSaved = false;
+    });
+  }
+};
+
+Note.prototype.delete = function () {
+  if (this.isBeingDeleted) return;
+  this.isBeingDeleted = true;
+
+  if (this.isNew()) return;
+
+  var _this = this;
+  NotedownAPI.delete(this, function (json) {
+    this.id = null;
+    this.isBeingDeleted = false;
+  }, function (code, msg) {
+    console.log("Error deleting note " + _this.id + ": " + code + " - " + msg);
+    this.isBeingDeleted = false;
+  });
+}
+
 Vue.component('note-item', {
   props: ['note', 'selected'],
   template: '#note-item',
@@ -73,11 +147,7 @@ new Vue({
   el: '#app',
   data: {
     notes: [],
-    selection: "none", // none, new or old
-    editedNote: {
-      id: null,
-      text: "",
-    },
+    editedNote: null,
   },
 
   mounted: function () {
@@ -87,23 +157,12 @@ new Vue({
   methods: {
 
     noteSelected: function () {
-      return this.selection == "new" || this.selection == "old";
-    },
-
-    editingNew: function () {
-      return this.selection == "new";
-    },
-
-    editingOld: function () {
-      return this.selection == "old";
-    },
-
-    editedNoteEmpty: function () {
-      return this.editedNote.text.trim() == "";
+      return !!this.editedNote;
     },
 
     closeEdited: function () {
-      if (this.editingNew() && this.editedNoteEmpty()) {
+      if (!this.noteSelected()) return;
+      if (this.editedNote.isNew() && this.editedNote.isEmpty()) {
         this.remove(this.editedNote);
       }
       this.save();
@@ -112,91 +171,57 @@ new Vue({
 
     selectNone: function () {
       this.editedNote = null;
-      this.selection = "none";
     },
 
     select: function (note) {
       this.save();
       this.editedNote = note;
-      this.selection = (note.id ? "old" : "new");
     },
 
     isSelected: function (note) {
-      return this.noteSelected() && this.editedNote.id == note.id;
+      return this.noteSelected() && this.editedNote.is(note);
     },
 
     newNote: function () {
-      if (this.editingNew() && this.editedNoteEmpty()) {
+      if (this.noteSelected() && this.editedNote.isNew() && this.editedNote.isEmpty()) {
         return;
       }
 
-      if (this.notes[0].text == "") {
+      if (this.notes[0].isEmpty()) {
         this.select(this.notes[0]);
         return;
       }
 
       this.save();
-      this.editedNote = { id: 0, text: "" };
-      this.selection = "new";
+      this.editedNote = new Note();
       this.notes.unshift(this.editedNote);
     },
 
     save: function () {
-      if (this.editingNew() && !this.editedNoteEmpty()) {
-        this.create(this.editedNote);
-        this.selection = "old";
-      } else if (this.editingOld()) {
-        this.update(this.editedNote);
-      }
+      if (!this.noteSelected()) return;
+      if (this.editedNote.isNew() && this.editedNote.isEmpty()) return;
+      this.editedNote.save();
     },
 
-    saveDebounced: _.debounce(function () {
-      if (this.editingNew()) {
-        this.create(this.editedNote);
-        this.selection = "old";
-      } else if (this.editingOld()) {
-        this.update(this.editedNote);
-      }
-    }, 500),
+    saveDebounced: _.debounce(function () { this.save(); }, 500),
 
     refresh: function () {
-      var self = this;
-      NotedownAPI.index(function (json) {
-        self.notes = json;
+      var _this = this;
+      NotedownAPI.index(function (notes) {
+        _this.notes = notes;
 
-        if (self.editingOld()) {
-          for (i in self.notes) {
-            if (self.notes[i].id == self.editedNote.id) {
-              self.editedNote = self.notes[i];
-              break;
-            }
+        for (i in _this.notes) {
+          if (_this.notes[i].is(this.editedNote)) {
+            _this.editedNote = _this.notes[i];
+            break;
           }
         }
 
-        if (self.editingNew()) {
-          self.notes.unshift(self.editedNote);
+        if (_this.noteSelected() && _this.editedNote.isNew()) {
+          _this.notes.unshift(_this.editedNote);
         }
       }, function (code, msg) {
         console.error("Error loading notes: " + code + " - " + msg);
-      });
-    },
-
-    create: function (note) {
-      NotedownAPI.create(note, function (json) {
-        note.id = json.id;
-      }, function (code, msg) {
-        console.error("Error creating note: " + code + " - " + msg);
-      });
-    },
-
-    update: function (note) {
-      // Note will not have assigned id, if it's never been saved.
-      if (!note.id) {
-        return;
-      }
-
-      NotedownAPI.update(note, null, function (code, msg) {
-        console.error("Error updating note " + note.id + ": " + code + " - " + msg);
       });
     },
 
@@ -204,15 +229,7 @@ new Vue({
       var delIndex = this.notes.indexOf(note);
       if (delIndex >= 0) this.notes.splice(delIndex, 1);
       if (this.editedNote == note) this.selectNone();
-
-      // Note will not have assigned id, if it's never been saved.
-      if (!note.id) {
-        return;
-      }
-
-      NotedownAPI.delete(note, null, function (code, msg) {
-        console.error("Error deleting note " + note.id + ": " + code + " - " + msg);
-      });
+      note.delete();
     },
 
   },
