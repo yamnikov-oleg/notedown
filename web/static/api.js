@@ -151,6 +151,10 @@ NotesList.prototype.get = function (i) {
   return this._notes[i];
 }
 
+NotesList.prototype.length = function () {
+  return this._notes.length;
+}
+
 NotesList.prototype.delete = function (note) {
   var ind = this._notes.indexOf(note);
   if (ind >= 0) this._notes.splice(ind, 1);
