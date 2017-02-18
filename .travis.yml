@@ -1,0 +1,10 @@
+language: python
+python: "3.5"
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq nodejs phantomjs
+  - sudo npm install -g mocha-phantomjs
+install:
+  - "pip install -r requirements.txt"
+script:
+  - "scripts/run-frontend-tests.sh"

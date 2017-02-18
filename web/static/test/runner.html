@@ -14,6 +14,11 @@
       window.assert = chai.assert;
     </script>
 
+    <script>
+    if (typeof initMochaPhantomJS === 'function') {
+      initMochaPhantomJS();
+    }
+    </script>
     <script>mocha.setup('bdd')</script>
     <script src="/static/api.js"></script>
     <script src="/static/test/api.js"></script>
