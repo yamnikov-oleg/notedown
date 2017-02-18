@@ -13,10 +13,6 @@
     <script src="/static/abstract-ui.js"></script>
   </head>
   <body>
-    <script type="text/x-template" id="note-item">
-      <li v-on:click="$emit('click')" v-bind:class="{ selected: selected }">{{ note.text }}</li>
-    </script>
-
     <div id="app">
 
       <aside>
@@ -26,8 +22,9 @@
           <button v-on:click="refresh">Обновить</button>
         </div>
         <ul>
-          <note-item v-for="note in notes.asArray()" v-bind:note="note" v-on:click="notes.select(note)"
-                     v-bind:selected="notes.isSelected(note)"></note-item>
+          <li v-for="note in notes.asArray()"
+              v-bind:class="{ selected: notes.isSelected(note) }"
+              v-on:click="notes.select(note)">{{ note.text }}</li>
         </ul>
       </aside>
 
@@ -43,7 +40,6 @@
       </main>
 
     </div>
-
     <script src="/static/ui.js"></script>
   </body>
 </html>

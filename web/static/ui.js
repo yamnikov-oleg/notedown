@@ -1,8 +1,3 @@
-Vue.component('note-item', {
-  props: ['note', 'selected'],
-  template: '#note-item',
-});
-
 new Vue({
   el: '#app',
   data: {
