@@ -10,6 +10,7 @@
 
     <link rel="stylesheet" href="/static/style.css">
     <script src="/static/api.js"></script>
+    <script src="/static/abstract-ui.js"></script>
   </head>
   <body>
     <script type="text/x-template" id="note-item">
@@ -20,25 +21,25 @@
 
       <aside>
         <div class="toolbar">
-          <button v-on:click="newNote">Новая заметка</button>
+          <button v-on:click="notes.new()">Новая заметка</button>
           <div class="spacer"></div>
           <button v-on:click="refresh">Обновить</button>
         </div>
         <ul>
-          <note-item v-for="note in notes.asArray()" v-bind:note="note" v-on:click="select(note)"
-                     v-bind:selected="isSelected(note)"></note-item>
+          <note-item v-for="note in notes.asArray()" v-bind:note="note" v-on:click="notes.select(note)"
+                     v-bind:selected="notes.isSelected(note)"></note-item>
         </ul>
       </aside>
 
       <main>
         <div class="toolbar-wrap">
-          <div class="toolbar" v-if="noteSelected()">
-            <button v-on:click="closeEdited">Закрыть</button>
+          <div class="toolbar" v-if="notes.hasSelected()">
+            <button v-on:click="notes.deselect()">Закрыть</button>
             <div class="spacer"></div>
-            <button v-on:click="remove(editedNote)">Удалить</button>
+            <button v-on:click="notes.remove(notes.selected)">Удалить</button>
           </div>
         </div>
-        <textarea v-if="noteSelected()" v-model="editedNote.text" v-on:input="saveDebounced"></textarea>
+        <textarea v-if="notes.hasSelected()" v-model="notes.selected.text" v-on:input="notes.saveDebounced"></textarea>
       </main>
 
     </div>
