@@ -51,7 +51,7 @@ var NotedownAPI = (function () {
     _call: call,
     index: function (success, fail) {
       call('GET', '/api/v1/notes', null, function (json) {
-        success(json.map(function (n) { return new Note(n); }));
+        success(new NotesList(json));
       }, fail);
     },
     create: function (note, success, fail) {
@@ -138,6 +138,45 @@ Note.prototype.delete = function () {
   });
 }
 
+var NotesList = function (raw) {
+  if (!raw) raw = [];
+
+  this._notes = [];
+  for (i in raw) {
+    this._notes.push(new Note(raw[i]));
+  }
+}
+
+NotesList.prototype.get = function (i) {
+  return this._notes[i];
+}
+
+NotesList.prototype.deleteAt = function (i) {
+  this._notes[i].delete();
+  this._notes.splice(i, 1);
+}
+
+NotesList.prototype.delete = function (note) {
+  var ind = this._notes.indexOf(note);
+  if (ind >= 0) this.deleteAt(ind);
+  else note.delete();
+}
+
+NotesList.prototype.unshift = function (note) {
+  this._notes.unshift(note);
+}
+
+NotesList.prototype.each = function (f) {
+  for (i in this._notes) {
+    var break_ = f(this._notes[i], i, this);
+    if (break_) break;
+  }
+}
+
+NotesList.prototype.asArray = function () {
+  return this._notes;
+}
+
 Vue.component('note-item', {
   props: ['note', 'selected'],
   template: '#note-item',
@@ -146,7 +185,7 @@ Vue.component('note-item', {
 new Vue({
   el: '#app',
   data: {
-    notes: [],
+    notes: new NotesList(),
     editedNote: null,
   },
 
@@ -187,8 +226,8 @@ new Vue({
         return;
       }
 
-      if (this.notes[0].isEmpty()) {
-        this.select(this.notes[0]);
+      if (this.notes.get(0).isEmpty()) {
+        this.select(this.notes.get(0));
         return;
       }
 
@@ -210,12 +249,12 @@ new Vue({
       NotedownAPI.index(function (notes) {
         _this.notes = notes;
 
-        for (i in _this.notes) {
-          if (_this.notes[i].is(this.editedNote)) {
-            _this.editedNote = _this.notes[i];
-            break;
+        _this.notes.each(function (note) {
+          if (note.is(this.editedNote)) {
+            _this.editedNote = note;
+            return true;
           }
-        }
+        });
 
         if (_this.noteSelected() && _this.editedNote.isNew()) {
           _this.notes.unshift(_this.editedNote);
@@ -226,10 +265,8 @@ new Vue({
     },
 
     remove: function (note) {
-      var delIndex = this.notes.indexOf(note);
-      if (delIndex >= 0) this.notes.splice(delIndex, 1);
+      this.notes.delete(note);
       if (this.editedNote == note) this.selectNone();
-      note.delete();
     },
 
   },

@@ -20,7 +20,7 @@
           <button v-on:click="refresh">Обновить</button>
         </div>
         <ul>
-          <note-item v-for="note in notes" v-bind:note="note" v-on:click="select(note)"
+          <note-item v-for="note in notes.asArray()" v-bind:note="note" v-on:click="select(note)"
                      v-bind:selected="isSelected(note)"></note-item>
         </ul>
       </aside>
