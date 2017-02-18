@@ -50,9 +50,7 @@ var NotedownAPI = (function () {
   return {
     _call: call,
     index: function (success, fail) {
-      call('GET', '/api/v1/notes', null, function (json) {
-        success(new NotesList(json));
-      }, fail);
+      call('GET', '/api/v1/notes', null, success, fail);
     },
     create: function (note, success, fail) {
       call('POST', '/api/v1/notes/create', { text: note.text }, success, fail);

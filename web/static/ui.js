@@ -67,7 +67,7 @@ new Vue({
     refresh: function () {
       var _this = this;
       NotedownAPI.index(function (notes) {
-        _this.notes = notes;
+        _this.notes = new NotesList(notes);
 
         _this.notes.each(function (note) {
           if (note.is(this.editedNote)) {
