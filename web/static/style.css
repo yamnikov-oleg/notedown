@@ -6,8 +6,6 @@
 
 .toolbar {
   display: flex;
-  flex-grow: 0;
-  flex-shrink: 0;
   flex-direction: row;
   height: 48px;
 }
@@ -27,24 +25,26 @@
   flex-direction: row;
 }
 
-#app aside {
+#app .sidebar {
   display: flex;
   flex-direction: column;
   flex-grow: 0;
   width: 320px;
   border-right: 1px solid gray;
 }
-#app aside .toolbar {
+#app .sidebar .toolbar {
+  flex-grow: 0;
+  flex-shrink: 0;
   border-bottom: 1px solid gray;
 }
-#app aside ul {
+#app .sidebar ul.notes-list {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   list-style: none;
   overflow-y: scroll;
 }
-#app aside ul li {
+#app .sidebar ul.notes-list li {
   flex-grow: 0;
   flex-shrink: 0;
   padding: 14px;
@@ -55,10 +55,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-#app aside ul li:not(.selected):hover {
+#app .sidebar ul.notes-list li:not(.selected):hover {
   background-color: #f4f4f4;
 }
-#app aside ul li.selected {
+#app .sidebar ul.notes-list li.selected {
   background-color: #e8e8e8;
 }
 
@@ -69,15 +69,11 @@
   position: relative;
 }
 #app main .toolbar-wrap {
+  flex-grow: 0;
+  flex-shrink: 0;
   border-bottom: 1px solid gray;
   height: 48px;
 }
-/*#app main .main-wrap {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-}*/
 #app main textarea {
   flex-grow: 1;
   resize: none;

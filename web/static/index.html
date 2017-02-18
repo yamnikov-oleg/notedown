@@ -15,13 +15,13 @@
   <body>
     <div id="app">
 
-      <aside>
+      <aside class="sidebar">
         <div class="toolbar">
           <button v-on:click="notes.new()">Новая заметка</button>
           <div class="spacer"></div>
           <button v-on:click="refresh">Обновить</button>
         </div>
-        <ul>
+        <ul class="notes-list">
           <li v-for="note in notes.asArray()"
               v-bind:class="{ selected: notes.isSelected(note) }"
               v-on:click="notes.select(note)">{{ note.text }}</li>
