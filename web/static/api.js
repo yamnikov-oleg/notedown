@@ -156,7 +156,13 @@ NotesList.prototype.length = function () {
 }
 
 NotesList.prototype.delete = function (note) {
-  var ind = this._notes.indexOf(note);
+  var ind = -1;
+  for (var i in this._notes) {
+    if (this._notes[i].is(note)) {
+      ind = i;
+      break;
+    }
+  }
   if (ind >= 0) this._notes.splice(ind, 1);
   note.delete();
 }
