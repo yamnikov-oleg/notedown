@@ -130,11 +130,11 @@ Note.prototype.delete = function () {
 
   var _this = this;
   NotedownAPI.delete(this, function (json) {
-    this.id = null;
-    this.isBeingDeleted = false;
+    _this.id = null;
+    _this.isBeingDeleted = false;
   }, function (code, msg) {
     console.log("Error deleting note " + _this.id + ": " + code + " - " + msg);
-    this.isBeingDeleted = false;
+    _this.isBeingDeleted = false;
   });
 }
 
@@ -142,7 +142,7 @@ var NotesList = function (raw) {
   if (!raw) raw = [];
 
   this._notes = [];
-  for (i in raw) {
+  for (var i in raw) {
     this._notes.push(new Note(raw[i]));
   }
 }
