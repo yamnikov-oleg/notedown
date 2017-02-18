@@ -151,19 +151,16 @@ NotesList.prototype.get = function (i) {
   return this._notes[i];
 }
 
-NotesList.prototype.deleteAt = function (i) {
-  this._notes[i].delete();
-  this._notes.splice(i, 1);
-}
-
 NotesList.prototype.delete = function (note) {
   var ind = this._notes.indexOf(note);
-  if (ind >= 0) this.deleteAt(ind);
-  else note.delete();
+  if (ind >= 0) this._notes.splice(ind, 1);
+  note.delete();
 }
 
-NotesList.prototype.unshift = function (note) {
+NotesList.prototype.new = function (opts) {
+  var note = new Note(opts);
   this._notes.unshift(note);
+  return note;
 }
 
 NotesList.prototype.each = function (f) {
@@ -232,8 +229,7 @@ new Vue({
       }
 
       this.save();
-      this.editedNote = new Note();
-      this.notes.unshift(this.editedNote);
+      this.editedNote = this.notes.new();
     },
 
     save: function () {
@@ -257,7 +253,7 @@ new Vue({
         });
 
         if (_this.noteSelected() && _this.editedNote.isNew()) {
-          _this.notes.unshift(_this.editedNote);
+          _this.editedNote = _this.notes.new(_this.editedNote);
         }
       }, function (code, msg) {
         console.error("Error loading notes: " + code + " - " + msg);
