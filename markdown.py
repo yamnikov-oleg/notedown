@@ -56,8 +56,13 @@ def header_level_or_0(line):
 def is_header(line):
     return header_level_or_0(line) != 0
 
+def is_ul_item(line):
+    LIST_MARKERS = ["* ", "+ ", "- "]
+    line = line.strip()
+    return any([ line.startswith(m) for m in LIST_MARKERS ])
+
 def is_paragraph(line):
-    return not is_header(line)
+    return not is_header(line) and not is_ul_item(line)
 
 def render_header(lines):
     line = lines.next()
@@ -70,6 +75,27 @@ def render_header(lines):
 
     content = line.strip()[lvl+1:].strip()
     return "<h{lvl}>{content}</h{lvl}>".format(lvl=lvl, content=content)
+
+def render_ul(lines):
+    items = []
+
+    def format_ul():
+        return "<ul>{}</ul>".format("".join([
+            "<li>{}</li>".format(it)
+            for it in items
+        ]))
+
+    while True:
+        line = lines.peek()
+        if line is None:
+            return format_ul()
+
+        if not is_ul_item(line):
+            return format_ul()
+
+        line = line.strip()[2:].strip()
+        items.append(line)
+        lines.next()
 
 def render_paragraph(lines):
     text = lines.next_non_empty()
@@ -99,6 +125,8 @@ def render_block(lines):
     line = lines.peek()
     if is_header(line):
         return render_header(lines)
+    elif is_ul_item(line):
+        return render_ul(lines)
     else:
         return render_paragraph(lines)
 

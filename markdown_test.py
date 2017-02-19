@@ -25,6 +25,27 @@ class RenderTestCase(unittest.TestCase):
         ("Hello\n## world\n!", "<p>Hello</p><h2>world</h2><p>!</p>"),
         ("###", "<p>###</p>"),
         ("### ", "<p>###</p>"),
+        # Unordered lists
+        (
+            "* First item \n* Second item\n*  Third item\n",
+            "<ul><li>First item</li><li>Second item</li><li>Third item</li></ul>",
+        ),
+        (
+            "+ First item \n  + Second item\n+  Third item\n",
+            "<ul><li>First item</li><li>Second item</li><li>Third item</li></ul>",
+        ),
+        (
+            "- First item \n- Second item\n  -  Third item\n",
+            "<ul><li>First item</li><li>Second item</li><li>Third item</li></ul>",
+        ),
+        (
+            "Pretext\n- First item \n- Second item\nPosttext",
+            "<p>Pretext</p><ul><li>First item</li><li>Second item</li></ul><p>Posttext</p>",
+        ),
+        (
+            "*First item \n+Second item\n-Third item\n* A real item",
+            "<p>*First item +Second item -Third item</p><ul><li>A real item</li></ul>",
+        ),
     ]
 
     def test_render(self):
