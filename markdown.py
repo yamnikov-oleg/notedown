@@ -102,11 +102,15 @@ def render_ul(lines):
         if line is None:
             return format_ul()
 
-        if not is_ul_item(line):
+        if is_ul_item(line):
+            line = line.strip()[2:].strip()
+            items.append(line)
+        elif line.startswith(' '):
+            line = line.strip()
+            items[len(items)-1] += " " + line
+        else:
             return format_ul()
 
-        line = line.strip()[2:].strip()
-        items.append(line)
         lines.next()
 
 def render_ol(lines):
@@ -123,11 +127,15 @@ def render_ol(lines):
         if line is None:
             return format_ol()
 
-        if not is_ol_item(line):
+        if is_ol_item(line):
+            line = ol_item_contents_or_none(line).strip()
+            items.append(line)
+        elif line.startswith(' '):
+            line = line.strip()
+            items[len(items)-1] += " " + line
+        else:
             return format_ol()
 
-        line = ol_item_contents_or_none(line).strip()
-        items.append(line)
         lines.next()
 
 def render_paragraph(lines):

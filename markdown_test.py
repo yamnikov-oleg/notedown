@@ -74,6 +74,10 @@ class RenderTestCase(unittest.TestCase):
             "* First item \n* Second item\n\n*  Third item\n",
             "<ul><li>First item</li><li>Second item</li></ul><ul><li>Third item</li></ul>",
         ),
+        (
+            "* First item \n* Second item \n Continue\n*  Third item\n  Continue",
+            "<ul><li>First item</li><li>Second item Continue</li><li>Third item Continue</li></ul>",
+        ),
     ]
 
     def test_unordered_lists(self):
@@ -103,6 +107,10 @@ class RenderTestCase(unittest.TestCase):
         (
             "1. First item \n2. Second item\n\n3.  Third item\n",
             "<ol><li>First item</li><li>Second item</li></ol><ol><li>Third item</li></ol>",
+        ),
+        (
+            "1. First item \n1. Second item \n Continue\n1.  Third item\n  Continue",
+            "<ol><li>First item</li><li>Second item Continue</li><li>Third item Continue</li></ol>",
         ),
     ]
 
