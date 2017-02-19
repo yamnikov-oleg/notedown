@@ -4,15 +4,30 @@ import markdown
 
 class RenderTestCase(unittest.TestCase):
 
-    CASES = [
-        # Basic paragraphs
+    def run_cases(self, cases):
+        for source, expected in cases:
+            actual = markdown.render(source)
+            self.assertEqual(actual, expected, msg="Source: \"{}\"".format(source))
+
+    EDGES = [
         ("", ""),
         (" \t\n", ""),
+    ]
+
+    def test_edges(self):
+        self.run_cases(self.EDGES)
+
+    PARAGRAPHS = [
         ("test", "<p>test</p>"),
         ("test  ", "<p>test</p>"),
         ("test\npar", "<p>test par</p>"),
         ("test\npar  \n\n  testpar2", "<p>test par</p><p>testpar2</p>"),
-        # Headers
+    ]
+
+    def test_paragraphs(self):
+        self.run_cases(self.PARAGRAPHS)
+
+    HEADERS = [
         ("# Hello", "<h1>Hello</h1>"),
         ("#   Hello", "<h1>Hello</h1>"),
         ("  #   Hello  ", "<h1>Hello</h1>"),
@@ -25,7 +40,12 @@ class RenderTestCase(unittest.TestCase):
         ("Hello\n## world\n!", "<p>Hello</p><h2>world</h2><p>!</p>"),
         ("###", "<p>###</p>"),
         ("### ", "<p>###</p>"),
-        # Unordered lists
+    ]
+
+    def test_headers(self):
+        self.run_cases(self.HEADERS)
+
+    UNORDERED_LISTS = [
         (
             "* First item \n* Second item\n*  Third item\n",
             "<ul><li>First item</li><li>Second item</li><li>Third item</li></ul>",
@@ -46,7 +66,12 @@ class RenderTestCase(unittest.TestCase):
             "*First item \n+Second item\n-Third item\n* A real item",
             "<p>*First item +Second item -Third item</p><ul><li>A real item</li></ul>",
         ),
-        # Ordered lists
+    ]
+
+    def test_unordered_lists(self):
+        self.run_cases(self.UNORDERED_LISTS)
+
+    ORDERED_LISTS = [
         (
             "1. First item \n2. Second item\n3.  Third item\n",
             "<ol><li>First item</li><li>Second item</li><li>Third item</li></ol>",
@@ -65,7 +90,5 @@ class RenderTestCase(unittest.TestCase):
         ),
     ]
 
-    def test_render(self):
-        for source, expected in self.CASES:
-            actual = markdown.render(source)
-            self.assertEqual(actual, expected, msg="Source: \"{}\"".format(source))
+    def test_ordered_lists(self):
+        self.run_cases(self.ORDERED_LISTS)
