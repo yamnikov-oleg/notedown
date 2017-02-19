@@ -131,10 +131,13 @@ def render_ol(lines):
         lines.next()
 
 def render_paragraph(lines):
-    text = lines.next_non_empty()
-    if not text:
+    text = lines.next()
+    if text is None:
         return ""
+
     text = text.strip()
+    if text == "":
+        return ""
 
     def format_par():
         return "<p>{}</p>".format(text)
