@@ -59,6 +59,10 @@ class RenderTestCase(unittest.TestCase):
             "<ul><li>First item</li><li>Second item</li><li>Third item</li></ul>",
         ),
         (
+            "+ First item \n  * Second item\n-  Third item\n",
+            "<ul><li>First item</li><li>Second item</li><li>Third item</li></ul>",
+        ),
+        (
             "Pretext\n- First item \n- Second item\nPosttext",
             "<p>Pretext</p><ul><li>First item</li><li>Second item</li></ul><p>Posttext</p>",
         ),
@@ -82,6 +86,10 @@ class RenderTestCase(unittest.TestCase):
         ),
         (
             "1. First item \n  1. Second item\n1.  Third item\n",
+            "<ol><li>First item</li><li>Second item</li><li>Third item</li></ol>",
+        ),
+        (
+            "1. First item \n  3. Second item\n2.  Third item\n",
             "<ol><li>First item</li><li>Second item</li><li>Third item</li></ol>",
         ),
         (
