@@ -105,7 +105,7 @@ def render_ul(lines):
         if is_ul_item(line):
             line = line.strip()[2:].strip()
             items.append(line)
-        elif line.startswith(' '):
+        elif line.startswith(' ') or line.startswith('\t'):
             line = line.strip()
             items[len(items)-1] += " " + line
         else:
@@ -130,7 +130,7 @@ def render_ol(lines):
         if is_ol_item(line):
             line = ol_item_contents_or_none(line).strip()
             items.append(line)
-        elif line.startswith(' '):
+        elif line.startswith(' ') or line.startswith('\t'):
             line = line.strip()
             items[len(items)-1] += " " + line
         else:
