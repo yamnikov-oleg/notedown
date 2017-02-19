@@ -1,3 +1,5 @@
+import re
+
 class LinesIterator:
 
     def __init__(self, string):
@@ -61,8 +63,18 @@ def is_ul_item(line):
     line = line.strip()
     return any([ line.startswith(m) for m in LIST_MARKERS ])
 
+def ol_item_contents_or_none(line):
+    m = re.match('\s*\d+\.\s', line)
+    if not m:
+        return None
+
+    return line[m.end():]
+
+def is_ol_item(line):
+    return ol_item_contents_or_none(line) is not None
+
 def is_paragraph(line):
-    return not is_header(line) and not is_ul_item(line)
+    return not is_header(line) and not is_ul_item(line) and not is_ol_item(line)
 
 def render_header(lines):
     line = lines.next()
@@ -97,6 +109,27 @@ def render_ul(lines):
         items.append(line)
         lines.next()
 
+def render_ol(lines):
+    items = []
+
+    def format_ol():
+        return "<ol>{}</ol>".format("".join([
+            "<li>{}</li>".format(it)
+            for it in items
+        ]))
+
+    while True:
+        line = lines.peek()
+        if line is None:
+            return format_ol()
+
+        if not is_ol_item(line):
+            return format_ol()
+
+        line = ol_item_contents_or_none(line).strip()
+        items.append(line)
+        lines.next()
+
 def render_paragraph(lines):
     text = lines.next_non_empty()
     if not text:
@@ -127,6 +160,8 @@ def render_block(lines):
         return render_header(lines)
     elif is_ul_item(line):
         return render_ul(lines)
+    elif is_ol_item(line):
+        return render_ol(lines)
     else:
         return render_paragraph(lines)
 

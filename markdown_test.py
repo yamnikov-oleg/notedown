@@ -46,6 +46,23 @@ class RenderTestCase(unittest.TestCase):
             "*First item \n+Second item\n-Third item\n* A real item",
             "<p>*First item +Second item -Third item</p><ul><li>A real item</li></ul>",
         ),
+        # Ordered lists
+        (
+            "1. First item \n2. Second item\n3.  Third item\n",
+            "<ol><li>First item</li><li>Second item</li><li>Third item</li></ol>",
+        ),
+        (
+            "1. First item \n  1. Second item\n1.  Third item\n",
+            "<ol><li>First item</li><li>Second item</li><li>Third item</li></ol>",
+        ),
+        (
+            "Pretext\n1. First item \n2. Second item\nPosttext",
+            "<p>Pretext</p><ol><li>First item</li><li>Second item</li></ol><p>Posttext</p>",
+        ),
+        (
+            "1.First item \n1 Second item\n1 . Third item\n1. A real item",
+            "<p>1.First item 1 Second item 1 . Third item</p><ol><li>A real item</li></ol>",
+        ),
     ]
 
     def test_render(self):
