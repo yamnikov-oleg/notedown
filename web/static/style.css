@@ -59,6 +59,8 @@
   padding: 14px;
   height: 48px;
   border-bottom: 1px solid #cdcdcd;
+  cursor: pointer;
+  user-select: none;
 
   white-space: nowrap;
   overflow: hidden;
