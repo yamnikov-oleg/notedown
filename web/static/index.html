@@ -19,9 +19,9 @@
 
       <aside class="sidebar">
         <div class="toolbar">
-          <button v-on:click="notes.new()">Новая заметка</button>
+          <button v-on:click="notes.new()"><i class="fa fa-plus"></i></button>
           <div class="spacer"></div>
-          <button v-on:click="refresh">Обновить</button>
+          <button v-on:click="refresh"><i class="fa fa-refresh"></i></button>
         </div>
         <ul class="notes-list">
           <li v-for="note in notes.asArray()"
@@ -33,11 +33,10 @@
       <main>
         <div class="toolbar-wrap">
           <div class="toolbar" v-if="notes.hasSelected()">
-            <button v-on:click="notes.deselect()">Закрыть</button>
+            <button v-if="!notes.isEditing" v-on:click="notes.isEditing = true"><i class="fa fa-pencil"></i></button>
+            <button v-else v-on:click="notes.isEditing = false"><i class="fa fa-check"></i></button>
             <div class="spacer"></div>
-            <button v-if="!notes.isEditing" v-on:click="notes.isEditing = true">Ред.</button>
-            <button v-else v-on:click="notes.isEditing = false">Ок</button>
-            <button v-on:click="notes.remove(notes.selected)">Удалить</button>
+            <button v-on:click="notes.remove(notes.selected)"><i class="fa fa-trash"></i></button>
           </div>
         </div>
         <div class="editor" v-if="notes.hasSelected()">

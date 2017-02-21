@@ -14,6 +14,15 @@
 }
 .toolbar button {
   flex-grow: 0;
+  background: none;
+  border: none;
+  font-size: 14pt;
+  width: 47px;
+  outline: none;
+  cursor: pointer;
+}
+.toolbar button:active {
+  background-color: #d9d9d9;
 }
 
 #app {
