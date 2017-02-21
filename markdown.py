@@ -34,6 +34,27 @@ class LinesIterator:
             else:
                 return line
 
+def render_marker(line, marker, left, right):
+    while marker in line:
+        left_replaced = line.replace(marker, left, 1)
+        if marker not in left_replaced:
+            break
+        line = left_replaced.replace(marker, right, 1)
+    return line
+
+def render_emphasis(line):
+    line = render_marker(line, "***", "<strong><em>", "</em></strong>")
+    line = render_marker(line, "___", "<strong><em>", "</em></strong>")
+    line = render_marker(line, "**", "<strong>", "</strong>")
+    line = render_marker(line, "__", "<strong>", "</strong>")
+    line = render_marker(line, "*", "<em>", "</em>")
+    line = render_marker(line, "_", "<em>", "</em>")
+    return line
+
+def render_line(line):
+    line = render_emphasis(line)
+    return line
+
 def header_level_or_0(line):
     level = 0
 
@@ -86,6 +107,7 @@ def render_header(lines):
         return ""
 
     content = line.strip()[lvl+1:].strip()
+    content = render_line(content)
     return "<h{lvl}>{content}</h{lvl}>".format(lvl=lvl, content=content)
 
 def render_ul(lines):
@@ -104,9 +126,11 @@ def render_ul(lines):
 
         if is_ul_item(line):
             line = line.strip()[2:].strip()
+            line = render_line(line)
             items.append(line)
         elif line.startswith(' ') or line.startswith('\t'):
             line = line.strip()
+            line = render_line(line)
             items[len(items)-1] += " " + line
         else:
             return format_ul()
@@ -129,9 +153,11 @@ def render_ol(lines):
 
         if is_ol_item(line):
             line = ol_item_contents_or_none(line).strip()
+            line = render_line(line)
             items.append(line)
         elif line.startswith(' ') or line.startswith('\t'):
             line = line.strip()
+            line = render_line(line)
             items[len(items)-1] += " " + line
         else:
             return format_ol()
@@ -146,6 +172,8 @@ def render_paragraph(lines):
     text = text.strip()
     if text == "":
         return ""
+
+    text = render_line(text)
 
     def format_par():
         return "<p>{}</p>".format(text)
@@ -162,6 +190,7 @@ def render_paragraph(lines):
         if line == "":
             return format_par()
 
+        line = render_line(line)
         text += " " + line
         lines.next()
 

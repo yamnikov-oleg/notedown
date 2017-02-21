@@ -124,3 +124,20 @@ class RenderTestCase(unittest.TestCase):
 
     def test_ordered_lists(self):
         self.run_cases(self.ORDERED_LISTS)
+
+    EMPHASIS_CASES = [
+        ("This is *emphasis*.", "<p>This is <em>emphasis</em>.</p>"),
+        ("This is _emphasis_.", "<p>This is <em>emphasis</em>.</p>"),
+        ("This is **strong**.", "<p>This is <strong>strong</strong>.</p>"),
+        ("This is __strong__.", "<p>This is <strong>strong</strong>.</p>"),
+        ("This is ***strong emphasis***.", "<p>This is <strong><em>strong emphasis</em></strong>.</p>"),
+        ("This is ___strong emphasis___.", "<p>This is <strong><em>strong emphasis</em></strong>.</p>"),
+        ("## This is *emphasis*.", "<h2>This is <em>emphasis</em>.</h2>"),
+        ("+ This is *emphasis*.", "<ul><li>This is <em>emphasis</em>.</li></ul>"),
+        ("1. This is *emphasis*.", "<ol><li>This is <em>emphasis</em>.</li></ol>"),
+        ("This is *emphasis**.", "<p>This is <em>emphasis</em>*.</p>"),
+        ("This is *strong\nemphasis*.", "<p>This is *strong emphasis*.</p>"),
+    ]
+
+    def test_emphasis(self):
+        self.run_cases(self.EMPHASIS_CASES)
