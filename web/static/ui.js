@@ -24,7 +24,7 @@ new Vue({
       var dataIndex = event.target.getAttribute('data-index');
       var checked = event.target.checked;
       this.notes.selected.setCheckbox(dataIndex, checked);
-      this.notes.selected.save();
+      this.notes.selected.save({ rerender: false });
     },
 
   },
