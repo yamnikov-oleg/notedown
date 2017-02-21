@@ -25,7 +25,28 @@
 .note-rendered p, .note-rendered ul, .note-rendered ol {
   margin-bottom: 10px;
 }
+.note-rendered ul ul, .note-rendered ul ol, .note-rendered ol ul, .note-rendered ol ol {
+  margin-bottom: 0px;
+}
 
 .note-rendered ul, .note-rendered ol {
   margin-left: 32px;
+}
+
+.note-rendered code, .note-rendered pre {
+  background-color: #ececec;
+}
+.note-rendered code {
+  padding: 4px;
+  border-radius: 2px;
+}
+
+.note-rendered pre {
+  border-radius: 2px;
+}
+.note-rendered pre code {
+  background: none;
+  display: block;
+  width: 100%;
+  padding: 16px;
 }
