@@ -87,4 +87,5 @@
 }
 #app main .note-rendered {
   flex-grow: 1;
+  overflow-y: auto;
 }
