@@ -139,6 +139,25 @@ Note.prototype.delete = function () {
   });
 }
 
+Note.prototype.setCheckbox = function (ind, check) {
+  var getCheckboxes = function (text) {
+    var index = text.search(/\[(x| )\]/g)
+    if (index < 0) return []
+
+    var otherIndices = getCheckboxes(text.slice(index + 1));
+    otherIndices = otherIndices.map(function (i) {
+      return i + index + 1
+    });
+    otherIndices.unshift(index);
+    return otherIndices;
+  }
+
+  var charIndex = getCheckboxes(this.text)[ind];
+  var text = this.text;
+  var newText = text.slice(0, charIndex) + '[' + (check ? 'x' : ' ') + ']' + text.slice(charIndex+3)
+  this.text = newText;
+};
+
 var NotesList = function (raw) {
   if (!raw) raw = [];
 

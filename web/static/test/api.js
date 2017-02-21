@@ -137,6 +137,30 @@ describe('Note', function () {
 
   });
 
+  describe("#setCheckbox(ind, check)", function () {
+
+    it("should check a checkbox", function () {
+      var note = new Note({ text: "hello [ ] world [x][ ]" });
+
+      note.setCheckbox(0, true);
+      note.setCheckbox(1, true);
+      note.setCheckbox(2, true);
+
+      assert.equal(note.text, "hello [x] world [x][x]");
+    });
+
+    it("should uncheck a checkbox", function () {
+      var note = new Note({ text: "hello [ ] world [x][ ]" });
+
+      note.setCheckbox(0, false);
+      note.setCheckbox(1, false);
+      note.setCheckbox(2, false);
+
+      assert.equal(note.text, "hello [ ] world [ ][ ]");
+    });
+
+  });
+
 });
 
 describe("NotesList", function () {
