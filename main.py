@@ -19,6 +19,6 @@ if __name__ == '__main__':
         import unittest
         suite = unittest.TestSuite()
         suite.addTest(unittest.defaultTestLoader.loadTestsFromNames([
-            'markdown_test',
+            # 'module_test',
         ]))
         unittest.TextTestRunner(verbosity=2).run(suite)
