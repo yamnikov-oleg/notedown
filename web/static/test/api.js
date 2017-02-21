@@ -10,7 +10,7 @@ MockAPI.prototype.create = function (note, success, fail) {
   note = _.clone(note);
   this.data.push(note);
   note.id = this.data.length;
-  success({ id: note.id, message: "ok" });
+  success({ id: note.id, text: note.text, rendered: note.text });
 };
 
 MockAPI.prototype.update = function (note, success, fail) {
@@ -23,7 +23,7 @@ MockAPI.prototype.update = function (note, success, fail) {
     }
   }
   if (!updated) throw new Error("Attempt to update non-existant note " + note.id);
-  success({ message: "ok" });
+  success({ id: note.id, text: note.text, rendered: note.text });
 };
 
 MockAPI.prototype.delete = function (note, success, fail) {

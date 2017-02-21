@@ -33,10 +33,15 @@
           <div class="toolbar" v-if="notes.hasSelected()">
             <button v-on:click="notes.deselect()">Закрыть</button>
             <div class="spacer"></div>
+            <button v-if="!notes.isEditing" v-on:click="notes.isEditing = true">Ред.</button>
+            <button v-else v-on:click="notes.isEditing = false">Ок</button>
             <button v-on:click="notes.remove(notes.selected)">Удалить</button>
           </div>
         </div>
-        <textarea v-if="notes.hasSelected()" v-model="notes.selected.text" v-on:input="notes.saveDebounced"></textarea>
+        <div class="editor" v-if="notes.hasSelected()">
+          <div class="note-rendered" v-if="!notes.isEditing" v-html="notes.selected.rendered"></div>
+          <textarea class="note-textarea" v-else v-model="notes.selected.text" v-on:input="notes.saveDebounced"></textarea>
+        </div>
       </main>
 
     </div>

@@ -74,9 +74,16 @@
   border-bottom: 1px solid gray;
   height: 48px;
 }
-#app main textarea {
+#app main .editor {
+  display: flex;
+  flex-grow: 1;
+}
+#app main textarea.note-textarea {
   flex-grow: 1;
   resize: none;
   border: none;
   outline: none;
+}
+#app main .note-rendered {
+  flex-grow: 1;
 }

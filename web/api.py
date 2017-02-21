@@ -7,18 +7,19 @@ def jsonify_status(code, *args, **kwargs):
     resp.status_code = code
     return resp
 
+def serialize_note(note):
+    return {
+        'id': note.id,
+        'text': note.text,
+        'rendered': note.render(),
+    }
+
 apiv1 = Blueprint('api_v1', __name__, url_prefix='/api/v1')
 
 @apiv1.route('/notes', methods=['GET'])
 def notes():
     notes = Note.select().order_by(Note.creation_time.desc())
-    notes_data = [
-        {
-            'id': n.id,
-            'text': n.text,
-        }
-        for n in notes
-    ]
+    notes_data = [ serialize_note(n) for n in notes ]
     return jsonify(notes_data)
 
 @apiv1.route('/notes/update', methods=['POST'])
@@ -38,7 +39,7 @@ def update():
 
     note.text = text
     note.save()
-    return jsonify(message="ok")
+    return jsonify(serialize_note(note))
 
 @apiv1.route('/notes/create', methods=['POST'])
 def create():
@@ -47,7 +48,7 @@ def create():
         return jsonify_status(400, message="Text is not provided")
 
     note = Note.create(text=text)
-    return jsonify(id=note.id, message="ok")
+    return jsonify(serialize_note(note))
 
 @apiv1.route('/notes/delete', methods=['POST'])
 def delete():

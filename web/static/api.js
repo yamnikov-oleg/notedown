@@ -74,6 +74,7 @@ var Note = function (fields) {
 
   this.id = fields.id;
   this.text = fields.text;
+  this.rendered = fields.rendered;
   this.isBeingSaved = false;
   this.isBeingDeleted = false;
 }
@@ -104,6 +105,7 @@ Note.prototype.save = function () {
     var _this = this;
     NotedownAPI.create(this, function (json) {
       _this.id = json.id;
+      _this.rendered = json.rendered;
       _this.isBeingSaved = false;
     }, function (code, msg) {
       console.log("Error creating note: " + code + " - " + msg);
@@ -112,6 +114,7 @@ Note.prototype.save = function () {
   } else {
     var _this = this;
     NotedownAPI.update(this, function (json) {
+      _this.rendered = json.rendered;
       _this.isBeingSaved = false;
     }, function (code, msg) {
       console.log("Error updating note " + _this.id + ": " + code + " - " + msg);

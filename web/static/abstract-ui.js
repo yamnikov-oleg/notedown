@@ -1,6 +1,7 @@
 var SelectableNotesList = function(data) {
   this.list = new NotesList(data);
   this.selected = null;
+  this.isEditing = false;
 
   this.saveDebounced = _.debounce((function () {
     this.save();
@@ -18,11 +19,13 @@ SelectableNotesList.prototype.deselect = function () {
 
   this.save();
   this.selected = null;
+  this.isEditing = false;
 };
 
 SelectableNotesList.prototype.select = function (note) {
   this.save();
   this.selected = note;
+  this.isEditing = false;
 };
 
 SelectableNotesList.prototype.isSelected = function (note) {
@@ -41,6 +44,7 @@ SelectableNotesList.prototype.new = function () {
   }
 
   this.select(this.list.new());
+  this.isEditing = true;
   return this.selected;
 };
 
@@ -61,7 +65,9 @@ SelectableNotesList.prototype.reset = function (data) {
   });
 
   if (this.hasSelected() && this.selected.isNew()) {
+    var wasEditing = this.isEditing;
     this.select(this.list.new(_this.editedNote));
+    this.isEditing = wasEditing;
   }
 };
 
