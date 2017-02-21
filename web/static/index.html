@@ -40,7 +40,7 @@
           </div>
         </div>
         <div class="editor" v-if="notes.hasSelected()">
-          <div class="note-rendered" v-if="!notes.isEditing" v-html="notes.selected.rendered"></div>
+          <div class="note-rendered" v-if="!notes.isEditing" v-html="notes.selected.rendered" v-on:change="onCheck" ></div>
           <textarea class="note-textarea" v-else v-model="notes.selected.text" v-on:input="notes.saveDebounced"></textarea>
         </div>
       </main>
