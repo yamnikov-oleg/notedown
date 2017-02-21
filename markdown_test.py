@@ -137,6 +137,11 @@ class RenderTestCase(unittest.TestCase):
         ("1. This is *emphasis*.", "<ol><li>This is <em>emphasis</em>.</li></ol>"),
         ("This is *emphasis**.", "<p>This is <em>emphasis</em>*.</p>"),
         ("This is *strong\nemphasis*.", "<p>This is *strong emphasis*.</p>"),
+
+        ("Another _*_ test*", "<p>Another <em>*</em> test*</p>"),
+        ("Another _t*es*t_", "<p>Another <em>t*es*t</em></p>"),
+        ("Another _t**es**t_", "<p>Another <em>t<strong>es</strong>t</em></p>"),
+        ("Another _t***es***t_", "<p>Another <em>t<strong><em>es</em></strong>t</em></p>"),
     ]
 
     def test_emphasis(self):

@@ -34,25 +34,53 @@ class LinesIterator:
             else:
                 return line
 
-def render_marker(line, marker, left, right):
-    while marker in line:
-        left_replaced = line.replace(marker, left, 1)
-        if marker not in left_replaced:
-            break
-        line = left_replaced.replace(marker, right, 1)
-    return line
+def render_line(line, disallow_tags=None):
+    SPANS = {
+        "***": ("<strong><em>", "</em></strong>"),
+        "___": ("<strong><em>", "</em></strong>"),
+        "**": ("<strong>", "</strong>"),
+        "__": ("<strong>", "</strong>"),
+        "*": ("<em>", "</em>"),
+        "_": ("<em>", "</em>"),
+    }
 
-def render_emphasis(line):
-    line = render_marker(line, "***", "<strong><em>", "</em></strong>")
-    line = render_marker(line, "___", "<strong><em>", "</em></strong>")
-    line = render_marker(line, "**", "<strong>", "</strong>")
-    line = render_marker(line, "__", "<strong>", "</strong>")
-    line = render_marker(line, "*", "<em>", "</em>")
-    line = render_marker(line, "_", "<em>", "</em>")
-    return line
+    if disallow_tags is None:
+        disallow_tags = []
 
-def render_line(line):
-    line = render_emphasis(line)
+    found_spans = []
+    for span, (left_tag, _) in SPANS.items():
+        if left_tag in disallow_tags:
+            continue
+
+        ind = line.find(span)
+        if ind < 0:
+            continue
+
+        found_spans.append((span, ind))
+
+    found_spans = sorted(found_spans, key=lambda span_ind: (span_ind[1], -len(span_ind[0])))
+
+    for span, ind in found_spans:
+        pair_ind = line.find(span, ind+len(span))
+        if pair_ind < 0:
+            # No pair for this span :(
+            continue
+
+        before_spans = line[:ind]
+        between_spans = line[ind+len(span):pair_ind]
+        after_spans = line[pair_ind+len(span):]
+
+        if between_spans == "":
+            # Empty spans are nonsense, should count
+            continue
+
+        left_tag, right_tag = SPANS[span]
+        disallow_tags += [ left_tag ]
+        line = before_spans + \
+               left_tag + render_line(between_spans, disallow_tags) + right_tag + \
+               render_line(after_spans, disallow_tags)
+        return line
+
     return line
 
 def header_level_or_0(line):
