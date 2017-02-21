@@ -80,6 +80,7 @@
 }
 #app main textarea.note-textarea {
   flex-grow: 1;
+  padding: 40px;
   resize: none;
   border: none;
   outline: none;
