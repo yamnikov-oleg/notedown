@@ -37,10 +37,12 @@ SelectableNotesList.prototype.new = function () {
     return this.selected;
   }
 
-  var first = this.list.get(0);
-  if (first.isEmpty()) {
-    this.select(first);
-    return first;
+  if (this.list.length > 0) {
+    var first = this.list.get(0);
+    if (first.isEmpty()) {
+      this.select(first);
+      return first;
+    }
   }
 
   this.select(this.list.new());
