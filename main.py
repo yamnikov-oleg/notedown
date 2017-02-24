@@ -2,6 +2,7 @@
 import sys
 
 import web
+import migrations
 import models
 import config
 
@@ -12,9 +13,9 @@ if __name__ == '__main__':
     if sys.argv[1] == "server":
         models.connect()
         web.app.run()
-    elif sys.argv[1] == "initdb":
+    elif sys.argv[1] == "migrate":
         models.connect()
-        models.initdb()
+        migrations.migrate_db()
     elif sys.argv[1] == "test":
         import unittest
         suite = unittest.TestSuite()
