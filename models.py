@@ -17,9 +17,6 @@ class Note(peewee.Model):
     class Meta:
         database = database
 
-def initdb():
-    database.create_tables([Note])
-
 def connect():
     if config.DATABASE['BACKEND'] == "sqlite":
         db = peewee.SqliteDatabase(config.DATABASE['NAME'])
