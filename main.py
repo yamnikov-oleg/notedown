@@ -16,6 +16,14 @@ if __name__ == '__main__':
     elif sys.argv[1] == "migrate":
         models.connect()
         migrations.migrate_db()
+    elif sys.argv[1] == "createuser":
+        from getpass import getpass
+        models.connect()
+        user = models.User()
+        user.username = input("Username: ")
+        user.set_password(getpass("Password: "))
+        user.save()
+        print("User is created!")
     elif sys.argv[1] == "test":
         import unittest
         suite = unittest.TestSuite()
