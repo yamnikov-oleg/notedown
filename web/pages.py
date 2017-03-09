@@ -1,8 +1,8 @@
 from flask import Blueprint, send_file
 
 import config
-from models import Note
 from . import api
+from models import Note
 
 pages = Blueprint('pages', __name__)
 

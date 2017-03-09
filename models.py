@@ -1,7 +1,9 @@
 import datetime
 import hashlib
+import json
 import random
 import string
+import uuid
 
 import peewee
 
@@ -9,6 +11,47 @@ import config
 import markdown
 
 database = peewee.Proxy()
+
+class Session(peewee.Model):
+    id = peewee.CharField(primary_key=True, max_length=255)
+    dict_json = peewee.TextField()
+    update_time = peewee.DateTimeField(default=datetime.datetime.now)
+
+    @classmethod
+    def create(cls, *args, **kwargs):
+        return super().create(id=cls.random_id())
+
+    @classmethod
+    def random_id(cls):
+        return uuid.uuid4().hex
+
+    def encode(self):
+        self.dict_json = json.dumps(self.dict)
+
+    def decode(self):
+        self._dict = json.loads(self.dict_json or "{}")
+
+    @property
+    def dict(self):
+        if not hasattr(self, '_dict'):
+            self.decode()
+        return self._dict
+
+    def setval(self, key, value, save=False):
+        self.dict[key] = value
+        if save:
+            self.save()
+
+    def getval(self, key, default=None):
+        return self.dict.get(key, default)
+
+    def save(self, *args, **kwargs):
+        self.encode()
+        self.update_time = datetime.datetime.now()
+        super().save(*args, **kwargs)
+
+    class Meta:
+        database = database
 
 def hash_password(pwd, salt):
     sha256 = hashlib.sha256()
