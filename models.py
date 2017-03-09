@@ -45,6 +45,15 @@ class Session(peewee.Model):
     def getval(self, key, default=None):
         return self.dict.get(key, default)
 
+    def delval(self, key, save=False):
+        try:
+            del self.dict[key]
+        except KeyError:
+            pass
+
+        if save:
+            self.save()
+
     def save(self, *args, **kwargs):
         self.encode()
         self.update_time = datetime.datetime.now()
