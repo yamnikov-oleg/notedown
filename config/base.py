@@ -1,3 +1,5 @@
+import os
+
 DEBUG = True
 
 DATABASE = {
@@ -5,4 +7,4 @@ DATABASE = {
     'NAME': "dev.db",
 }
 
-SECRET_KEY = None
+SECRET_KEY = os.getenv('SECRET_KEY')

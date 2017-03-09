@@ -9,3 +9,5 @@ install:
 script:
   - "scripts/run-backend-tests.sh"
   - "scripts/run-frontend-tests.sh"
+env:
+  - SECRET_KEY=kVAhMrjshuSVrZGWV2dj
