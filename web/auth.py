@@ -2,7 +2,7 @@ from flask import session
 
 from models import Session
 
-def get_session_model():
+def get_session():
     try:
         sid = session['sid']
         return Session.get(Session.id == sid)
