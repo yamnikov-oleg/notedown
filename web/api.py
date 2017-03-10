@@ -1,3 +1,5 @@
+from functools import wraps
+
 from flask import Blueprint, jsonify, request, url_for
 
 from .auth import get_user, is_authenticated, login, logout
@@ -10,6 +12,15 @@ def jsonify_status(code, *args, **kwargs):
     resp.status_code = code
     return resp
 
+def require_auth(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if not is_authenticated():
+            return jsonify_status(403, message="Please, authenticate with /api/v1/account/login")
+        else:
+            return f(*args, **kwargs)
+    return wrapper
+
 def serialize_note(note):
     return {
         'id': note.id,
@@ -18,12 +29,15 @@ def serialize_note(note):
     }
 
 @apiv1.route('/notes', methods=['GET'])
+@require_auth
 def notes_index():
-    notes = Note.select().order_by(Note.creation_time.desc())
+    user = get_user()
+    notes = Note.select().where(Note.author == user).order_by(Note.creation_time.desc())
     notes_data = [ serialize_note(n) for n in notes ]
     return jsonify(notes_data)
 
 @apiv1.route('/notes/update', methods=['POST'])
+@require_auth
 def notes_update():
     nid = request.form.get('id')
     if not nid:
@@ -38,20 +52,25 @@ def notes_update():
     except Note.DoesNotExist:
         return jsonify_status(404, message="Note with ID {} was not found".format(nid))
 
+    if note.author.id != get_user().id:
+        return jsonify_status(403, message="Note with ID {} does not belong to current user".format(nid))
+
     note.text = text
     note.save()
     return jsonify(serialize_note(note))
 
 @apiv1.route('/notes/create', methods=['POST'])
+@require_auth
 def notes_create():
     text = request.form.get('text')
     if text is None:
         return jsonify_status(400, message="Text is not provided")
 
-    note = Note.create(text=text)
+    note = Note.create(text=text, author=get_user())
     return jsonify(serialize_note(note))
 
 @apiv1.route('/notes/delete', methods=['POST'])
+@require_auth
 def notes_delete():
     nid = request.form.get('id')
     if not nid:
@@ -61,6 +80,9 @@ def notes_delete():
         note = Note.get(Note.id == nid)
     except Note.DoesNotExist:
         return jsonify_status(404, message="Note with ID {} was not found".format(nid))
+
+    if note.author.id != get_user().id:
+        return jsonify_status(403, message="Note with ID {} does not belong to current user".format(nid))
 
     note.delete_instance()
     return jsonify(message="ok")
