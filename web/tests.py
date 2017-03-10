@@ -11,7 +11,7 @@ class APIv1AccountTestCase(unittest.TestCase):
 
     def setUp(self):
         self._test_user = models.User()
-        self._test_user.username = "APIv1AccountTestCase.test_login_index"
+        self._test_user.username = "APIv1AccountTestCase"
         self._test_password = "FwyQAUEx"
         self._test_user.set_password(self._test_password)
         self._test_user.save()
