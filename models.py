@@ -7,7 +7,6 @@ import uuid
 
 import peewee
 
-import config
 import markdown
 
 database = peewee.Proxy()
@@ -107,10 +106,10 @@ class Note(peewee.Model):
     class Meta:
         database = database
 
-def connect():
-    if config.DATABASE['BACKEND'] == "sqlite":
-        db = peewee.SqliteDatabase(config.DATABASE['NAME'])
+def connect(**config):
+    if config['BACKEND'] == "sqlite":
+        db = peewee.SqliteDatabase(config['NAME'])
     else:
-        raise ValueError('undefined DB backend: {}'.format(config.DATABASE['BACKEND']))
+        raise ValueError('undefined DB backend: {}'.format(config['BACKEND']))
 
     database.initialize(db)

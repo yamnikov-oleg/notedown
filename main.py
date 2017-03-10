@@ -11,7 +11,7 @@ if __name__ == '__main__':
         print("Debug mode is enabled")
 
     if sys.argv[1] == "server":
-        models.connect()
+        models.connect(**config.DATABASE)
         web.app.run()
     elif sys.argv[1] == "migrate":
         models.connect()
