@@ -1,6 +1,9 @@
 from flask import Blueprint, jsonify, request, url_for
 
+from .auth import get_user, is_authenticated, login, logout
 from models import Note
+
+apiv1 = Blueprint('api_v1', __name__, url_prefix='/api/v1')
 
 def jsonify_status(code, *args, **kwargs):
     resp = jsonify(*args, **kwargs)
@@ -13,8 +16,6 @@ def serialize_note(note):
         'text': note.text,
         'rendered': note.render(),
     }
-
-apiv1 = Blueprint('api_v1', __name__, url_prefix='/api/v1')
 
 @apiv1.route('/notes', methods=['GET'])
 def notes_index():
@@ -63,3 +64,32 @@ def notes_delete():
 
     note.delete_instance()
     return jsonify(message="ok")
+
+def serialize_account(user):
+    return {
+        'username': user.username,
+    }
+
+@apiv1.route('/account', methods=['GET', 'POST'])
+def account_index():
+    if is_authenticated():
+        user = get_user()
+        return jsonify(account=serialize_account(user))
+    else:
+        return jsonify(account=None)
+
+@apiv1.route('/account/login', methods=['POST'])
+def account_login():
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    user = login(username, password)
+    if user is None:
+        return jsonify_status(403, account=None)
+
+    return jsonify(account=serialize_account(user))
+
+@apiv1.route('/account/logout', methods=['POST'])
+def account_logout():
+    logout()
+    return jsonify(account=None)

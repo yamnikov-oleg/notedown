@@ -25,9 +25,13 @@ if __name__ == '__main__':
         user.save()
         print("User is created!")
     elif sys.argv[1] == "test":
+        print("Creating an in-memory test database...")
+        models.connect(BACKEND="sqlite", NAME=":memory:")
+        migrations.migrate_db()
+
         import unittest
         suite = unittest.TestSuite()
         suite.addTest(unittest.defaultTestLoader.loadTestsFromNames([
-            # 'module_test',
+            'web.tests',
         ]))
         unittest.TextTestRunner(verbosity=2).run(suite)
