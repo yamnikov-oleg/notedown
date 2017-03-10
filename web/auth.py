@@ -34,24 +34,26 @@ def get_user():
 def login_with_model(user):
     session = get_session()
     session.setval(USER_ID_KEY, user.id, save=True)
-    return True
+    return user
 
 def login_with_uid(uid):
-    if not User.select().where(User.id == uid).exists():
-        return False
+    try:
+        user = User.get(User.id == uid)
+    except User.DoesNotExist:
+        return None
 
     session = get_session()
     session.setval(USER_ID_KEY, uid, save=True)
-    return True
+    return user
 
 def login_with_creds(username, password):
     try:
         user = User.get(username=username)
     except User.DoesNotExist:
-        return False
+        return None
 
     if not user.check_password(password):
-        return False
+        return None
 
     return login_with_model(user)
 
