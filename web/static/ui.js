@@ -1,7 +1,9 @@
-new Vue({
-  el: '#app',
-  data: {
-    notes: new SelectableNotesList(),
+Vue.component('notes-editor', {
+  template: "#notes-editor-template",
+  data: function () {
+    return {
+      notes: new SelectableNotesList(),
+    };
   },
 
   mounted: function () {
@@ -19,4 +21,8 @@ new Vue({
     },
 
   },
+});
+
+new Vue({
+  el: '#app',
 });

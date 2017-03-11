@@ -30,30 +30,35 @@
   height: 100%;
   height: 100vh;
   overflow: hidden;
+}
+
+.notes-editor {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: row;
 }
 
-#app .sidebar {
+.notes-editor .sidebar {
   display: flex;
   flex-direction: column;
   flex-grow: 0;
   width: 320px;
   border-right: 1px solid gray;
 }
-#app .sidebar .toolbar {
+.notes-editor .sidebar .toolbar {
   flex-grow: 0;
   flex-shrink: 0;
   border-bottom: 1px solid gray;
 }
-#app .sidebar ul.notes-list {
+.notes-editor .sidebar ul.notes-list {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   list-style: none;
   overflow-y: scroll;
 }
-#app .sidebar ul.notes-list li {
+.notes-editor .sidebar ul.notes-list li {
   flex-grow: 0;
   flex-shrink: 0;
   padding: 14px;
@@ -66,37 +71,37 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-#app .sidebar ul.notes-list li:not(.selected):hover {
+.notes-editor .sidebar ul.notes-list li:not(.selected):hover {
   background-color: #f4f4f4;
 }
-#app .sidebar ul.notes-list li.selected {
+.notes-editor .sidebar ul.notes-list li.selected {
   background-color: #e8e8e8;
 }
 
-#app main {
+.notes-editor main {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   position: relative;
 }
-#app main .toolbar-wrap {
+.notes-editor main .toolbar-wrap {
   flex-grow: 0;
   flex-shrink: 0;
   border-bottom: 1px solid gray;
   height: 48px;
 }
-#app main .editor {
+.notes-editor main .editor {
   display: flex;
   flex-grow: 1;
 }
-#app main textarea.note-textarea {
+.notes-editor main textarea.note-textarea {
   flex-grow: 1;
   padding: 40px;
   resize: none;
   border: none;
   outline: none;
 }
-#app main .note-rendered {
+.notes-editor main .note-rendered {
   flex-grow: 1;
   overflow-y: auto;
 }

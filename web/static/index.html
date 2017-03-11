@@ -15,37 +15,45 @@
     <script src="/static/abstract-ui.js"></script>
   </head>
   <body>
-    <div id="app">
 
-      <aside class="sidebar">
-        <div class="toolbar">
-          <button v-on:click="notes.new()"><i class="fa fa-plus"></i></button>
-          <div class="spacer"></div>
-          <button v-on:click="notes.refresh()"><i class="fa fa-refresh"></i></button>
-        </div>
-        <ul class="notes-list">
-          <li v-for="note in notes.asArray()"
-              v-bind:class="{ selected: notes.isSelected(note) }"
-              v-on:click="notes.select(note)">{{ note.text }}</li>
-        </ul>
-      </aside>
+    <script type="text/x-template" id="notes-editor-template">
+      <div class="notes-editor">
 
-      <main>
-        <div class="toolbar-wrap">
-          <div class="toolbar" v-if="notes.hasSelected()">
-            <button v-if="!notes.isEditing" v-on:click="notes.isEditing = true"><i class="fa fa-pencil"></i></button>
-            <button v-else v-on:click="notes.isEditing = false"><i class="fa fa-check"></i></button>
+        <aside class="sidebar">
+          <div class="toolbar">
+            <button v-on:click="notes.new()"><i class="fa fa-plus"></i></button>
             <div class="spacer"></div>
-            <button v-on:click="notes.remove(notes.selected)"><i class="fa fa-trash"></i></button>
+            <button v-on:click="notes.refresh()"><i class="fa fa-refresh"></i></button>
           </div>
-        </div>
-        <div class="editor" v-if="notes.hasSelected()">
-          <div class="note-rendered" v-if="!notes.isEditing" v-html="notes.selected.rendered" v-on:change="onCheck" ></div>
-          <textarea class="note-textarea" v-else v-model="notes.selected.text" v-on:input="notes.saveDebounced"></textarea>
-        </div>
-      </main>
+          <ul class="notes-list">
+            <li v-for="note in notes.asArray()"
+                v-bind:class="{ selected: notes.isSelected(note) }"
+                v-on:click="notes.select(note)">{{ note.text }}</li>
+          </ul>
+        </aside>
 
+        <main>
+          <div class="toolbar-wrap">
+            <div class="toolbar" v-if="notes.hasSelected()">
+              <button v-if="!notes.isEditing" v-on:click="notes.isEditing = true"><i class="fa fa-pencil"></i></button>
+              <button v-else v-on:click="notes.isEditing = false"><i class="fa fa-check"></i></button>
+              <div class="spacer"></div>
+              <button v-on:click="notes.remove(notes.selected)"><i class="fa fa-trash"></i></button>
+            </div>
+          </div>
+          <div class="editor" v-if="notes.hasSelected()">
+            <div class="note-rendered" v-if="!notes.isEditing" v-html="notes.selected.rendered" v-on:change="onCheck" ></div>
+            <textarea class="note-textarea" v-else v-model="notes.selected.text" v-on:input="notes.saveDebounced"></textarea>
+          </div>
+        </main>
+
+      </div>
+    </script>
+
+    <div id="app">
+      <notes-editor></notes-editor>
     </div>
+
     <script src="/static/ui.js"></script>
   </body>
 </html>
