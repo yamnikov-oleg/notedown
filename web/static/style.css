@@ -147,8 +147,30 @@
 }
 
 .bottom-bar {
-  height: 32px;
+  display: flex;
   flex-grow: 0;
+  flex-direction: row;
+  align-items: center;
+  height: 32px;
+  padding: 6px;
   background-color: black;
   color: white;
+}
+.bottom-bar .spacer {
+  flex-grow: 1;
+}
+.bottom-bar h1 {
+  display: block;
+  font-size: 12pt;
+}
+.bottom-bar .username-display {
+  margin-right: 12px;
+}
+.bottom-bar .logout-button {
+  background: none;
+  border: none;
+  outline: none;
+  color: white;
+  cursor: pointer;
+  text-decoration: underline;
 }

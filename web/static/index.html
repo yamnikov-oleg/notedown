@@ -68,8 +68,10 @@
 
     <script type="text/x-template" id="bottom-bar-template">
       <div class="bottom-bar">
-        <div>{{ account.username }}</div>
-        <button v-on:click="$emit('logout')">Выйти</button>
+        <h1>Notedown</h1>
+        <div class="spacer"></div>
+        <div class="username-display">{{ account.username }}</div>
+        <button v-on:click="$emit('logout')" class="logout-button">Выйти</button>
       </div>
     </script>
 
