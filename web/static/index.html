@@ -38,7 +38,7 @@
               <button v-if="!notes.isEditing" v-on:click="notes.isEditing = true"><i class="fa fa-pencil"></i></button>
               <button v-else v-on:click="notes.isEditing = false"><i class="fa fa-check"></i></button>
               <div class="spacer"></div>
-              <button v-on:click="notes.remove(notes.selected)"><i class="fa fa-trash"></i></button>
+              <button v-on:click="remove_confirm"><i class="fa fa-trash"></i></button>
             </div>
           </div>
           <div class="editor" v-if="notes.hasSelected()">

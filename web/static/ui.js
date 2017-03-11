@@ -12,6 +12,12 @@ Vue.component('notes-editor', {
 
   methods: {
 
+    remove_confirm: function () {
+      if (this.notes.selected.isNew() || confirm("Delete this note FOREVER?")) {
+        this.notes.remove(this.notes.selected);
+      }
+    },
+
     onCheck: function (event) {
       if (!event) return;
       var dataIndex = event.target.getAttribute('data-index');
@@ -80,6 +86,8 @@ new Vue({
     },
 
     logout: function () {
+      if (!confirm("Log out?")) return;
+
       NotedownAPI.account.logout();
       this.loggedIn = false;
       this.account = null;
