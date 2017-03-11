@@ -40,7 +40,8 @@ Vue.component('login-form', {
       NotedownAPI.account.login(this.username, this.password, function (data) {
         _this.$emit('login', data.account);
       }, function (code, msg) {
-        _this.errorMessage = "Не удалось";
+        _this.errorMessage = "Could not log in with these credentials";
+        console.log("Error logging-in: ", code, msg);
       });
     },
 

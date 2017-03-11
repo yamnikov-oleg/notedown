@@ -34,10 +34,48 @@
   overflow: hidden;
 }
 
-.notes-editor {
+.login-form, .notes-editor {
   width: 100%;
-  display: flex;
   flex-grow: 1;
+}
+
+.login-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.login-form .form-wrap {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  height: 300px;
+  padding: 12px;
+}
+.login-form .form-wrap > * {
+  margin-bottom: 6px;
+}
+.login-form h1 {
+  font-size: 18pt;
+  text-align: center;
+}
+.login-form h2 {
+  font-size: 12pt;
+  text-align: center;
+}
+.login-form input {
+  font-size: 14pt;
+}
+.login-form .error-message {
+  height: 24px;
+  text-align: center;
+  color: rgb(201, 39, 22);
+}
+.login-form button {
+  font-size: 14pt;
+}
+
+.notes-editor {
+  display: flex;
   flex-direction: row;
 }
 

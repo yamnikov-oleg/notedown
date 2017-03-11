@@ -51,11 +51,18 @@
     </script>
 
     <script type="text/x-template" id="login-form-template">
-      <div>
-        <input type="text" v-model="username">
-        <input type="password" v-model="password">
-        <p>{{ errorMessage }}</p>
-        <button v-on:click="submit">Войти</button>
+      <div class="login-form">
+        <div class="form-wrap">
+          <h1>Welcome to Notedown</h1>
+          <h2>Please, log in using the form below</h2>
+          <input type="text" class="username-input" v-model="username">
+          <input type="password" class="password-input" v-model="password">
+          <p class="error-message">
+            <i v-if="errorMessage" class="fa fa-remove"></i>
+            {{ errorMessage }}
+          </p>
+          <button v-on:click="submit">Log in</button>
+        </div>
       </div>
     </script>
 
