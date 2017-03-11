@@ -18,6 +18,7 @@ var NotedownAPI = (function () {
 
     var options = {
       method: method,
+      credentials: 'same-origin',
     }
 
     if (data) {
@@ -61,6 +62,20 @@ var NotedownAPI = (function () {
       },
       delete: function (note, success, fail) {
         call('POST', '/api/v1/notes/delete', { id: note.id }, success, fail);
+      },
+    },
+
+    account: {
+      index: function (success, fail) {
+        call('GET', '/api/v1/account', null, success, fail);
+      },
+      login: function (username, password, success, fail) {
+        call('POST', '/api/v1/account/login',
+             { username: username, password: password },
+             success, fail);
+      },
+      logout: function (success, fail) {
+        call('POST', '/api/v1/account/logout', success, fail);
       },
     },
   };
