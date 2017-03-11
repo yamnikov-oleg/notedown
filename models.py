@@ -69,8 +69,8 @@ def hash_password(pwd, salt):
 
 class User(peewee.Model):
     username = peewee.CharField(max_length=64, unique=True)
-    password = peewee.CharField(max_length=32)
-    salt = peewee.CharField(max_length=32)
+    password = peewee.CharField(max_length=64)
+    salt = peewee.CharField(max_length=64)
     creation_time = peewee.DateTimeField(default=datetime.datetime.now)
 
     def reset_salt(self):
