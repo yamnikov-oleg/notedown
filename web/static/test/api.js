@@ -1,59 +1,58 @@
-var MockAPI = function (data) {
-  this.data = data = data || [];
-
-  this.notes = {
-    index: function (success, fail) {
-      success(_.clone(data));
-    },
-    create: function (note, success, fail) {
-      note = _.clone(note);
-      data.push(note);
-      note.id = data.length;
-      success({ id: note.id, text: note.text, rendered: note.text });
-    },
-    update: function (note, success, fail) {
-      var updated = false;
-      for (var i in data) {
-        if (data[i].id == note.id) {
-          data[i] = _.clone(note);
-          updated = true;
-          break;
-        }
-      }
-      if (!updated) throw new Error("Attempt to update non-existant note " + note.id);
-      success({ id: note.id, text: note.text, rendered: note.text });
-    },
-    delete: function (note, success, fail) {
-      var ind = -1;
-      for (var i in data) {
-        if (data[i].id == note.id) {
-          ind = i;
-        }
-      }
-
-      if (ind >= 0) data.splice(i, 1);
-      else throw new Error("Attempt to delete non-existant note " + note.id);
-
-      success({ message: "ok" });
-    },
-  };
+var NotesMockAPI = function (data) {
+  this.data = data || [];
 }
 
-var FailAPI = function (code, msg) {
+NotesMockAPI.prototype.index = function (success, fail) {
+  success(_.clone(this.data));
+};
+
+NotesMockAPI.prototype.create = function (note, success, fail) {
+  note = _.clone(note);
+  this.data.push(note);
+  note.id = this.data.length;
+  success({ id: note.id, text: note.text, rendered: note.text });
+};
+
+NotesMockAPI.prototype.update = function (note, success, fail) {
+  var updated = false;
+  for (var i in this.data) {
+    if (this.data[i].id == note.id) {
+      this.data[i] = _.clone(note);
+      updated = true;
+      break;
+    }
+  }
+  if (!updated) throw new Error("Attempt to update non-existant note " + note.id);
+  success({ id: note.id, text: note.text, rendered: note.text });
+};
+
+NotesMockAPI.prototype.delete = function (note, success, fail) {
+  var ind = -1;
+  for (var i in this.data) {
+    if (this.data[i].id == note.id) {
+      ind = i;
+    }
+  }
+
+  if (ind >= 0) this.data.splice(i, 1);
+  else throw new Error("Attempt to delete non-existant note " + note.id);
+
+  success({ message: "ok" });
+};
+
+var NotesFailAPI = function (code, msg) {
   this.code = code;
   this.msg = msg;
-
-  var fail = this.fail = function (callback) {
-    callback(this.code, this.msg);
-  };
-
-  this.notes = {
-    index: function (_, fail) { fail(fail); },
-    create: function (_, _, fail) { fail(fail); },
-    update: function (_, _, fail) { fail(fail); },
-    delete: function (_, _, fail) { fail(fail); },
-  };
 }
+
+NotesFailAPI.prototype.fail = function (callback) {
+  callback(this.code, this.msg);
+}
+
+NotesFailAPI.prototype.index = function (_, fail) { this.fail(fail); }
+NotesFailAPI.prototype.create = function (_, _, fail) { this.fail(fail); }
+NotesFailAPI.prototype.update = function (_, _, fail) { this.fail(fail); }
+NotesFailAPI.prototype.delete = function (_, _, fail) { this.fail(fail); }
 
 describe('Note', function () {
 
@@ -62,22 +61,22 @@ describe('Note', function () {
     it("should update existing note via API", function () {
       var noteData = { id: 1, text: "123" };
       var note = new Note(noteData);
-      window.NotedownAPI = new MockAPI([ noteData ]);
+      window.NotedownAPI = { notes: new NotesMockAPI([ noteData ]) };
 
       note.text = "456";
       note.save();
 
-      assert.equal(note.text, window.NotedownAPI.data[0].text);
+      assert.equal(note.text, window.NotedownAPI.notes.data[0].text);
     });
 
     it("should create new note via API", function () {
       var noteData = { text: "123" };
       var note = new Note(noteData);
-      window.NotedownAPI = new MockAPI();
+      window.NotedownAPI = { notes: new NotesMockAPI() };
 
       note.save();
 
-      assert.equal(note.text, window.NotedownAPI.data[0].text);
+      assert.equal(note.text, window.NotedownAPI.notes.data[0].text);
       assert.equal(note.id, 1);
     });
 
@@ -85,13 +84,13 @@ describe('Note', function () {
       var noteData = { text: "123" };
       var note = new Note(noteData);
 
-      window.NotedownAPI = new FailAPI(500, "Test-Provoked Error");
+      window.NotedownAPI = { notes: new NotesFailAPI(500, "Test-Provoked Error") };
       note.save();
 
-      window.NotedownAPI = new MockAPI();
+      window.NotedownAPI = { notes: new NotesMockAPI() };
       note.save();
 
-      assert.equal(note.text, window.NotedownAPI.data[0].text);
+      assert.equal(note.text, window.NotedownAPI.notes.data[0].text);
       assert.equal(note.id, 1);
     });
 
@@ -99,14 +98,14 @@ describe('Note', function () {
       var noteData = { id: 1, text: "123" };
       var note = new Note(noteData);
 
-      window.NotedownAPI = new FailAPI(500, "Test-Provoked Error");
+      window.NotedownAPI = { notes: new NotesFailAPI(500, "Test-Provoked Error") };
       note.text = "456";
       note.save();
 
-      window.NotedownAPI = new MockAPI([ noteData ]);
+      window.NotedownAPI = { notes: new NotesMockAPI([ noteData ]) };
       note.save();
 
-      assert.equal(note.text, window.NotedownAPI.data[0].text);
+      assert.equal(note.text, window.NotedownAPI.notes.data[0].text);
     });
 
   });
@@ -116,24 +115,24 @@ describe('Note', function () {
     it("should delete note via API", function () {
       var noteData = { id: 1, text: "123" };
       var note = new Note(noteData);
-      window.NotedownAPI = new MockAPI([ noteData ]);
+      window.NotedownAPI = { notes: new NotesMockAPI([ noteData ]) };
 
       note.delete();
 
-      assert.lengthOf(window.NotedownAPI.data, 0);
+      assert.lengthOf(window.NotedownAPI.notes.data, 0);
     });
 
     it("should not fail to redelete if API fails", function () {
       var noteData = { id: 1, text: "123" };
       var note = new Note(noteData);
 
-      window.NotedownAPI = new FailAPI(500, "Test-Provoked Error");
+      window.NotedownAPI = { notes: new NotesFailAPI(500, "Test-Provoked Error") };
       note.delete();
 
-      window.NotedownAPI = new MockAPI([ noteData ]);
+      window.NotedownAPI = { notes: new NotesMockAPI([ noteData ]) };
       note.delete();
 
-      assert.lengthOf(window.NotedownAPI.data, 0);
+      assert.lengthOf(window.NotedownAPI.notes.data, 0);
     });
 
   });
@@ -195,7 +194,7 @@ describe("NotesList", function () {
       var noteData1 = { id: 1, text: "123" };
       var noteData2 = { id: 2, text: "123" };
       var list = new NotesList();
-      window.NotedownAPI = new MockAPI([ noteData1, noteData2 ]);
+      window.NotedownAPI = { notes: new NotesMockAPI([ noteData1, noteData2 ]) };
 
       list.refresh();
 
@@ -213,29 +212,29 @@ describe("NotesList", function () {
     it("should delete exact note from API", function () {
       var noteData = { id: 1, text: "123" };
       var list = new NotesList([ noteData ]);
-      window.NotedownAPI = new MockAPI([ noteData ]);
+      window.NotedownAPI = { notes: new NotesMockAPI([ noteData ]) };
 
       list.delete(list.get(0));
 
       assert.equal(list.length(), 0);
-      assert.lengthOf(window.NotedownAPI.data, 0);
+      assert.lengthOf(window.NotedownAPI.notes.data, 0);
     });
 
     it("should delete note with same id from API", function () {
       var noteData = { id: 1, text: "123" };
       var list = new NotesList([ noteData ]);
-      window.NotedownAPI = new MockAPI([ noteData ]);
+      window.NotedownAPI = { notes: new NotesMockAPI([ noteData ]) };
 
       list.delete(new Note(noteData));
 
       assert.equal(list.length(), 0);
-      assert.lengthOf(window.NotedownAPI.data, 0);
+      assert.lengthOf(window.NotedownAPI.notes.data, 0);
     });
 
     it("should remove new (unsaved) not from itself", function () {
       var noteData = { text: "123" };
       var list = new NotesList([ noteData ]);
-      window.NotedownAPI = new MockAPI();
+      window.NotedownAPI = { notes: new NotesMockAPI() };
 
       list.delete(list.get(0));
 
