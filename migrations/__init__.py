@@ -30,6 +30,8 @@ def list_available():
 def Migrator():
     if config.DATABASE['BACKEND'] == "sqlite":
         return migrate.SqliteMigrator(models.database)
+    elif config.DATABASE['BACKEND'] == "mysql":
+        return migrate.MySQLMigrator(models.database)
     else:
         raise ValueError('migrations are not supported for DB backend: {}'.format(config.DATABASE['BACKEND']))
 
@@ -48,7 +50,7 @@ def applied_migrations():
 
     try:
         return get()
-    except peewee.OperationalError:
+    except Exception:
         models.database.create_tables([Migration])
         return get()
 

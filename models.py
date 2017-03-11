@@ -109,6 +109,14 @@ class Note(peewee.Model):
 def connect(**config):
     if config['BACKEND'] == "sqlite":
         db = peewee.SqliteDatabase(config['NAME'])
+    elif config['BACKEND'] == 'mysql':
+        db = peewee.MySQLDatabase(
+            config['NAME'],
+            host=config.get('HOST', 'localhost'),
+            port=config.get('PORT', 3306),
+            user=config.get('USER'),
+            passwd=config.get('PASSWORD'),
+        )
     else:
         raise ValueError('undefined DB backend: {}'.format(config['BACKEND']))
 
