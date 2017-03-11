@@ -29,13 +29,15 @@
   width: 100%;
   height: 100%;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 
 .notes-editor {
   width: 100%;
-  height: 100%;
   display: flex;
+  flex-grow: 1;
   flex-direction: row;
 }
 
@@ -104,4 +106,11 @@
 .notes-editor main .note-rendered {
   flex-grow: 1;
   overflow-y: auto;
+}
+
+.bottom-bar {
+  height: 32px;
+  flex-grow: 0;
+  background-color: black;
+  color: white;
 }

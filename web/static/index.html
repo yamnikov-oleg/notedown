@@ -50,8 +50,30 @@
       </div>
     </script>
 
+    <script type="text/x-template" id="login-form-template">
+      <div>
+        <input type="text" v-model="username">
+        <input type="password" v-model="password">
+        <p>{{ errorMessage }}</p>
+        <button v-on:click="submit">Войти</button>
+      </div>
+    </script>
+
+    <script type="text/x-template" id="bottom-bar-template">
+      <div class="bottom-bar">
+        <div>{{ account.username }}</div>
+        <button v-on:click="$emit('logout')">Выйти</button>
+      </div>
+    </script>
+
     <div id="app">
-      <notes-editor></notes-editor>
+      <div v-if="loggedIn == undefined">
+        <p>Loading...</p>
+      </div>
+      <notes-editor v-if="loggedIn == true"></notes-editor>
+      <login-form v-if="loggedIn == false" v-on:login="login"></login-form>
+
+      <bottom-bar v-if="loggedIn == true" v-bind:account="account" v-on:logout="logout"></bottom-bar>
     </div>
 
     <script src="/static/ui.js"></script>

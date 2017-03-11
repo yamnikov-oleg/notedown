@@ -23,6 +23,66 @@ Vue.component('notes-editor', {
   },
 });
 
+Vue.component('login-form', {
+  template: '#login-form-template',
+  data: function () {
+    return {
+      username: "",
+      password: "",
+      errorMessage: null,
+    }
+  },
+
+  methods: {
+
+    submit: function () {
+      var _this = this;
+      NotedownAPI.account.login(this.username, this.password, function (data) {
+        _this.$emit('login', data.account);
+      }, function (code, msg) {
+        _this.errorMessage = "Не удалось";
+      });
+    },
+
+  },
+});
+
+Vue.component('bottom-bar', {
+  template: '#bottom-bar-template',
+  props: ['account'],
+});
+
 new Vue({
   el: '#app',
+  data: {
+    loggedIn: undefined,
+    account: null,
+  },
+
+  mounted: function () {
+    var _this = this;
+    NotedownAPI.account.index(function (data) {
+      if (data.account) {
+        _this.loggedIn = true;
+        _this.account = data.account;
+      } else {
+        _this.loggedIn = false;
+      }
+    });
+  },
+
+  methods: {
+
+    login: function (account) {
+      this.loggedIn = true;
+      this.account = account;
+    },
+
+    logout: function () {
+      NotedownAPI.account.logout();
+      this.loggedIn = false;
+      this.account = null;
+    },
+
+  },
 });
