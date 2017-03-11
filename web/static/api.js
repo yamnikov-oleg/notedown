@@ -40,7 +40,7 @@ var NotedownAPI = (function () {
         if (status >= 200 && status <= 299) {
           successWrapped(json);
         } else {
-          failWrapped(status, json.message);
+          failWrapped(status, json && json.message);
         }
       }, function (error) {
         failWrapped(status, error.toString());
