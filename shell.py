@@ -3,4 +3,4 @@ import migrations
 import models
 import config
 
-models.connect()
+models.connect(**config.DATABASE)

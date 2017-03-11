@@ -14,11 +14,11 @@ if __name__ == '__main__':
         models.connect(**config.DATABASE)
         web.app.run()
     elif sys.argv[1] == "migrate":
-        models.connect()
+        models.connect(**config.DATABASE)
         migrations.migrate_db()
     elif sys.argv[1] == "createuser":
         from getpass import getpass
-        models.connect()
+        models.connect(**config.DATABASE)
         user = models.User()
         user.username = input("Username: ")
         user.set_password(getpass("Password: "))
