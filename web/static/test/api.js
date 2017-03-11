@@ -1,58 +1,59 @@
 var MockAPI = function (data) {
-  this.data = data || [];
+  this.data = data = data || [];
+
+  this.notes = {
+    index: function (success, fail) {
+      success(_.clone(data));
+    },
+    create: function (note, success, fail) {
+      note = _.clone(note);
+      data.push(note);
+      note.id = data.length;
+      success({ id: note.id, text: note.text, rendered: note.text });
+    },
+    update: function (note, success, fail) {
+      var updated = false;
+      for (var i in data) {
+        if (data[i].id == note.id) {
+          data[i] = _.clone(note);
+          updated = true;
+          break;
+        }
+      }
+      if (!updated) throw new Error("Attempt to update non-existant note " + note.id);
+      success({ id: note.id, text: note.text, rendered: note.text });
+    },
+    delete: function (note, success, fail) {
+      var ind = -1;
+      for (var i in data) {
+        if (data[i].id == note.id) {
+          ind = i;
+        }
+      }
+
+      if (ind >= 0) data.splice(i, 1);
+      else throw new Error("Attempt to delete non-existant note " + note.id);
+
+      success({ message: "ok" });
+    },
+  };
 }
-
-MockAPI.prototype.index = function (success, fail) {
-  success(_.clone(this.data));
-};
-
-MockAPI.prototype.create = function (note, success, fail) {
-  note = _.clone(note);
-  this.data.push(note);
-  note.id = this.data.length;
-  success({ id: note.id, text: note.text, rendered: note.text });
-};
-
-MockAPI.prototype.update = function (note, success, fail) {
-  var updated = false;
-  for (var i in this.data) {
-    if (this.data[i].id == note.id) {
-      this.data[i] = _.clone(note);
-      updated = true;
-      break;
-    }
-  }
-  if (!updated) throw new Error("Attempt to update non-existant note " + note.id);
-  success({ id: note.id, text: note.text, rendered: note.text });
-};
-
-MockAPI.prototype.delete = function (note, success, fail) {
-  var ind = -1;
-  for (var i in this.data) {
-    if (this.data[i].id == note.id) {
-      ind = i;
-    }
-  }
-
-  if (ind >= 0) this.data.splice(i, 1);
-  else throw new Error("Attempt to delete non-existant note " + note.id);
-
-  success({ message: "ok" });
-};
 
 var FailAPI = function (code, msg) {
   this.code = code;
   this.msg = msg;
-}
 
-FailAPI.prototype.fail = function (callback) {
-  callback(this.code, this.msg);
-}
+  var fail = this.fail = function (callback) {
+    callback(this.code, this.msg);
+  };
 
-FailAPI.prototype.index = function (_, fail) { this.fail(fail); }
-FailAPI.prototype.create = function (_, _, fail) { this.fail(fail); }
-FailAPI.prototype.update = function (_, _, fail) { this.fail(fail); }
-FailAPI.prototype.delete = function (_, _, fail) { this.fail(fail); }
+  this.notes = {
+    index: function (_, fail) { fail(fail); },
+    create: function (_, _, fail) { fail(fail); },
+    update: function (_, _, fail) { fail(fail); },
+    delete: function (_, _, fail) { fail(fail); },
+  };
+}
 
 describe('Note', function () {
 

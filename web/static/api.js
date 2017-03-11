@@ -49,17 +49,19 @@ var NotedownAPI = (function () {
 
   return {
     _call: call,
-    index: function (success, fail) {
-      call('GET', '/api/v1/notes', null, success, fail);
-    },
-    create: function (note, success, fail) {
-      call('POST', '/api/v1/notes/create', { text: note.text }, success, fail);
-    },
-    update: function (note, success, fail) {
-      call('POST', '/api/v1/notes/update', { id: note.id, text: note.text }, success, fail);
-    },
-    delete: function (note, success, fail) {
-      call('POST', '/api/v1/notes/delete', { id: note.id }, success, fail);
+    notes: {
+      index: function (success, fail) {
+        call('GET', '/api/v1/notes', null, success, fail);
+      },
+      create: function (note, success, fail) {
+        call('POST', '/api/v1/notes/create', { text: note.text }, success, fail);
+      },
+      update: function (note, success, fail) {
+        call('POST', '/api/v1/notes/update', { id: note.id, text: note.text }, success, fail);
+      },
+      delete: function (note, success, fail) {
+        call('POST', '/api/v1/notes/delete', { id: note.id }, success, fail);
+      },
     },
   };
 })();
@@ -106,7 +108,7 @@ Note.prototype.save = function (opts) {
 
   if (this.isNew()) {
     var _this = this;
-    NotedownAPI.create(this, function (json) {
+    NotedownAPI.notes.create(this, function (json) {
       _this.id = json.id;
       if (opts.rerender) _this.rendered = json.rendered;
       _this.isBeingSaved = false;
@@ -116,7 +118,7 @@ Note.prototype.save = function (opts) {
     });
   } else {
     var _this = this;
-    NotedownAPI.update(this, function (json) {
+    NotedownAPI.notes.update(this, function (json) {
       if (opts.rerender) _this.rendered = json.rendered;
       _this.isBeingSaved = false;
     }, function (code, msg) {
@@ -133,7 +135,7 @@ Note.prototype.delete = function () {
   if (this.isNew()) return;
 
   var _this = this;
-  NotedownAPI.delete(this, function (json) {
+  NotedownAPI.notes.delete(this, function (json) {
     _this.id = null;
     _this.isBeingDeleted = false;
   }, function (code, msg) {
