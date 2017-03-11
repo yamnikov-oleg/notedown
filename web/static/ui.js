@@ -5,19 +5,10 @@ new Vue({
   },
 
   mounted: function () {
-    this.refresh();
+    this.notes.refresh();
   },
 
   methods: {
-
-    refresh: function () {
-      var _this = this;
-      NotedownAPI.notes.index(function (data) {
-        _this.notes.reset(data);
-      }, function (code, msg) {
-        console.error("Error loading notes: " + code + " - " + msg);
-      });
-    },
 
     onCheck: function (event) {
       if (!event) return;

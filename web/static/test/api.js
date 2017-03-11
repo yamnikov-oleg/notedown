@@ -189,6 +189,25 @@ describe("NotesList", function () {
 
   });
 
+  describe("#refresh()", function () {
+
+    it("should load notes from API", function () {
+      var noteData1 = { id: 1, text: "123" };
+      var noteData2 = { id: 2, text: "123" };
+      var list = new NotesList();
+      window.NotedownAPI = new MockAPI([ noteData1, noteData2 ]);
+
+      list.refresh();
+
+      assert.equal(list.length(), 2);
+      assert.equal(list.get(0).id, noteData1.id);
+      assert.equal(list.get(0).text, noteData1.text);
+      assert.equal(list.get(1).id, noteData2.id);
+      assert.equal(list.get(1).text, noteData2.text);
+    });
+
+  });
+
   describe("#delete(note)", function () {
 
     it("should delete exact note from API", function () {

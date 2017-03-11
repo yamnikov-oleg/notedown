@@ -21,7 +21,7 @@
         <div class="toolbar">
           <button v-on:click="notes.new()"><i class="fa fa-plus"></i></button>
           <div class="spacer"></div>
-          <button v-on:click="refresh"><i class="fa fa-refresh"></i></button>
+          <button v-on:click="notes.refresh()"><i class="fa fa-refresh"></i></button>
         </div>
         <ul class="notes-list">
           <li v-for="note in notes.asArray()"

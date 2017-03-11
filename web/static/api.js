@@ -180,6 +180,18 @@ NotesList.prototype.length = function () {
   return this._notes.length;
 }
 
+NotesList.prototype.refresh = function () {
+  var _this = this;
+  NotedownAPI.notes.index(function (data) {
+    _this._notes = [];
+    for (var i in data) {
+      _this._notes.push(new Note(data[i]));
+    }
+  }, function (code, msg) {
+    console.error("Error loading notes: " + code + " - " + msg);
+  });
+}
+
 NotesList.prototype.delete = function (note) {
   var ind = -1;
   for (var i in this._notes) {

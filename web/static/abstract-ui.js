@@ -56,6 +56,15 @@ SelectableNotesList.prototype.save = function () {
   this.selected.save();
 };
 
+SelectableNotesList.prototype.refresh = function () {
+  var _this = this;
+  NotedownAPI.notes.index(function (data) {
+    _this.reset(data);
+  }, function (code, msg) {
+    console.error("Error loading notes: " + code + " - " + msg);
+  });
+}
+
 SelectableNotesList.prototype.reset = function (data) {
   this.list = new NotesList(data);
 
