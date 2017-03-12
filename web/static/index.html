@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Notedown (&alpha;)</title>
 
+    <link rel="stylesheet" href="/static/fa/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/deps/highlightjs/github.css">
     <script src="/static/deps/underscore-min.js"></script>
     <script src="/static/deps/fetch.js"></script>
@@ -14,11 +15,10 @@
     </script>
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
 
-    <link rel="stylesheet" href="/static/fa/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/static/style.css">
-    <link rel="stylesheet" href="/static/note-rendered.css">
-    <script src="/static/api.js"></script>
-    <script src="/static/abstract-ui.js"></script>
+    <link rel="stylesheet" href="/static/style.css?v1">
+    <link rel="stylesheet" href="/static/note-rendered.css?v1">
+    <script src="/static/api.js?v1"></script>
+    <script src="/static/abstract-ui.js?v1"></script>
   </head>
   <body>
 
@@ -91,6 +91,6 @@
       <bottom-bar v-if="loggedIn == true" v-bind:account="account" v-on:logout="logout"></bottom-bar>
     </div>
 
-    <script src="/static/ui.js"></script>
+    <script src="/static/ui.js?v1"></script>
   </body>
 </html>
