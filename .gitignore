@@ -103,3 +103,5 @@ ENV/
 
 # Local configuration
 config/local.py
+docker-compose.yml
+*.local*
