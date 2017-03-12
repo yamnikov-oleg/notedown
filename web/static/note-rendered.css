@@ -22,7 +22,7 @@
   margin-bottom: 10px;
 }
 
-.note-rendered p, .note-rendered ul, .note-rendered ol {
+.note-rendered p, .note-rendered ul, .note-rendered ol, .note-rendered pre {
   margin-bottom: 10px;
 }
 .note-rendered ul ul, .note-rendered ul ol, .note-rendered ol ul, .note-rendered ol ol {
