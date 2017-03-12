@@ -4,8 +4,14 @@
     <meta charset="utf-8">
     <title>Notedown (&alpha;)</title>
 
+    <link rel="stylesheet" href="/static/deps/highlightjs/github.css">
     <script src="/static/deps/underscore-min.js"></script>
     <script src="/static/deps/fetch.js"></script>
+    <script src="/static/deps/highlightjs/highlight.pack.js"></script>
+    <script>
+      // Disable auto language detection
+      hljs.configure({ languages: [] });
+    </script>
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
 
     <link rel="stylesheet" href="/static/fa/css/font-awesome.min.css">
@@ -42,7 +48,7 @@
             </div>
           </div>
           <div class="editor" v-if="notes.hasSelected()">
-            <div class="note-rendered" v-if="!notes.isEditing" v-html="notes.selected.rendered" v-on:change="onCheck" ></div>
+            <div class="note-rendered" v-if="!notes.isEditing" v-html="notes.selected.rendered" v-on:change="onCheck" v-highlightjs></div>
             <textarea class="note-textarea" v-else v-model="notes.selected.text" v-on:input="notes.saveDebounced"></textarea>
           </div>
         </main>
