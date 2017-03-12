@@ -12,7 +12,7 @@ if __name__ == '__main__':
 
     if sys.argv[1] == "server":
         models.connect(**config.DATABASE)
-        web.app.run()
+        web.app.run(host=config.HOST, port=config.PORT)
     elif sys.argv[1] == "migrate":
         models.connect(**config.DATABASE)
         migrations.migrate_db()
