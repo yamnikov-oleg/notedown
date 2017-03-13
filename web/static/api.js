@@ -35,7 +35,8 @@ var NotedownAPI = (function () {
         status = response.status;
         return response.json();
       }, function (error) {
-        failWrapped(0, error.toString());
+        status = 0;
+        return { message: error.toString() };
       })
       .then(function (json) {
         if (status >= 200 && status <= 299) {
