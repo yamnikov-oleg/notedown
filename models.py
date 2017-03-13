@@ -6,6 +6,7 @@ import string
 import uuid
 
 import peewee
+from playhouse.shortcuts import RetryOperationalError
 
 import markdown
 
@@ -106,11 +107,14 @@ class Note(peewee.Model):
     class Meta:
         database = database
 
+class RetryMySQLDatabase(RetryOperationalError, peewee.MySQLDatabase):
+    pass
+
 def connect(**config):
     if config['BACKEND'] == "sqlite":
         db = peewee.SqliteDatabase(config['NAME'])
     elif config['BACKEND'] == 'mysql':
-        db = peewee.MySQLDatabase(
+        db = RetryMySQLDatabase(
             config['NAME'],
             host=config.get('HOST', 'localhost'),
             port=config.get('PORT', 3306),
