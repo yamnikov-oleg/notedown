@@ -59,10 +59,12 @@ Vue.component('login-form', {
 
     submit: function () {
       var _this = this;
-      NotedownAPI.account.login(this.username, this.password, function (data) {
-        _this.$emit('login', data.account);
-      }, function (code, msg) {
+      Account.login(this.username, this.password, function (account) {
+        _this.$emit('login', account);
+      }, function () {
         _this.errorMessage = "Could not log in with these credentials";
+      }, function (code, msg) {
+        _this.errorMessage = "Network error occured";
         console.log("Error logging-in: ", code, msg);
       });
     },
@@ -84,13 +86,11 @@ new Vue({
 
   mounted: function () {
     var _this = this;
-    NotedownAPI.account.index(function (data) {
-      if (data.account) {
-        _this.loggedIn = true;
-        _this.account = data.account;
-      } else {
-        _this.loggedIn = false;
-      }
+    Account.getOrNull(function (account) {
+      _this.account = account;
+      _this.loggedIn = !!account;
+    }, function (code, msg) {
+      console.log("Error fetching account: " + code + " " + msg);
     });
   },
 
@@ -104,7 +104,7 @@ new Vue({
     logout: function () {
       if (!confirm("Log out?")) return;
 
-      NotedownAPI.account.logout();
+      Account.logout();
       this.loggedIn = false;
       this.account = null;
     },
