@@ -206,9 +206,9 @@ describe('Note', function () {
         rendered: "<h1>Hello world!</h1><p>A&lt;&gt; &quot;paragraph&quot;</p>"
       });
 
-      var title = note.bodyPreview();
+      var bodyPreview = note.bodyPreview();
 
-      assert.equal(title, "A<> \"paragraph\"");
+      assert.equal(bodyPreview, "A<> \"paragraph\"");
     });
 
   });
