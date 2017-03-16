@@ -185,6 +185,16 @@ describe('Note', function () {
       assert.equal(title, "Hello<> \"world\"!");
     });
 
+    it("should return empty string if note is not rendered", function () {
+      var note = new Note({
+        text: "# Hello world!\nA paragraph\n",
+      });
+
+      var title = note.title();
+
+      assert.equal(title, "");
+    });
+
   });
 
   describe("#bodyPreview()", function () {
@@ -209,6 +219,16 @@ describe('Note', function () {
       var bodyPreview = note.bodyPreview();
 
       assert.equal(bodyPreview, "A<> \"paragraph\"");
+    });
+
+    it("should return empty string if note is not rendered", function () {
+      var note = new Note({
+        text: "# Hello world!\nA paragraph\n",
+      });
+
+      var bodyPreview = note.bodyPreview();
+
+      assert.equal(bodyPreview, "");
     });
 
   });

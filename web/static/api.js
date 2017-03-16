@@ -203,6 +203,8 @@ Note.firstTagSlice = function (rendered) {
 };
 
 Note.prototype.splitByBlocks = function () {
+  if (!this.rendered) return [];
+
   var tagSubstrings = [];
   var rendered = this.rendered.trim();
   while (rendered.length > 0) {
