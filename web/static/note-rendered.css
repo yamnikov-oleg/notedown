@@ -50,3 +50,7 @@
   width: 100%;
   padding: 16px;
 }
+
+.note-rendered img {
+  max-width: 100%;
+}
