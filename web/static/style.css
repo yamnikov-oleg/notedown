@@ -119,6 +119,7 @@
 .notes-editor .sidebar ul.notes-list li .body {
   color: #6f6f6f;
   overflow: hidden;
+  max-height: 36px;
 }
 .notes-editor .sidebar ul.notes-list li:not(.selected):hover {
   background-color: #f4f4f4;
