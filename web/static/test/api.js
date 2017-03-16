@@ -161,6 +161,58 @@ describe('Note', function () {
 
   });
 
+  describe("#title()", function () {
+
+    it("should return contents of first rendered block", function () {
+      var note = new Note({
+        text: "# Hello world!\nA paragraph\n",
+        rendered: "<h1>Hello world!</h1><p>A paragraph</p>"
+      });
+
+      var title = note.title();
+
+      assert.equal(title, "Hello world!");
+    });
+
+    it("should unescape html escape sequences", function () {
+      var note = new Note({
+        text: "# Hello<> \"world\"!\nA paragraph\n",
+        rendered: "<h1>Hello&lt;&gt; &quot;world&quot;!</h1><p>A paragraph</p>"
+      });
+
+      var title = note.title();
+
+      assert.equal(title, "Hello<> \"world\"!");
+    });
+
+  });
+
+  describe("#bodyPreview()", function () {
+
+    it("should return text contents of note's body", function () {
+      var note = new Note({
+        text: "# Hello world!\nA paragraph\n\n* Item 1\n* Item2\n",
+        rendered: "<h1>Hello world!</h1><p>A paragraph</p><ul><li>Item 1</li><li>Item 2</li></ul>"
+      });
+
+      var bodyPreview = note.bodyPreview();
+
+      assert.equal(bodyPreview, "A paragraph\nItem 1\nItem 2");
+    });
+
+    it("should unescape html escape sequences", function () {
+      var note = new Note({
+        text: "# Hello world!\nA<> \"paragraph\"\n",
+        rendered: "<h1>Hello world!</h1><p>A&lt;&gt; &quot;paragraph&quot;</p>"
+      });
+
+      var title = note.bodyPreview();
+
+      assert.equal(title, "A<> \"paragraph\"");
+    });
+
+  });
+
 });
 
 describe("NotesList", function () {

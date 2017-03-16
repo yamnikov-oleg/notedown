@@ -179,6 +179,78 @@ Note.prototype.setCheckbox = function (ind, check) {
   this.text = newText;
 };
 
+Note.firstTagSlice = function (rendered) {
+  var openTagRe = /^<(\w+)([^>]*)>/;
+  var openTagMatch = openTagRe.exec(rendered);
+
+  if (!openTagMatch) {
+    return null;
+  }
+
+  var tag = openTagMatch[1];
+
+  var closeTagRe = new RegExp("</" + tag + ">");
+  var closeTagMatch = closeTagRe.exec(rendered);
+
+  var closeIndex;
+  if (closeTagMatch) {
+    closeIndex = closeTagMatch.index + closeTagMatch[0].length;
+  } else {
+    closeIndex = rendered.length;
+  }
+
+  return { start: 0, end: closeIndex };
+};
+
+Note.prototype.splitByBlocks = function () {
+  var tagSubstrings = [];
+  var rendered = this.rendered.trim();
+  while (rendered.length > 0) {
+    var tagSlice = Note.firstTagSlice(rendered);
+    if (!tagSlice) {
+      tagSubstrings.push(rendered);
+      break;
+    }
+
+    var tagsub = rendered.slice(tagSlice.start, tagSlice.end);
+    tagSubstrings.push(tagsub);
+
+    rendered = rendered.slice(tagSlice.end).trim();
+  }
+
+  return tagSubstrings;
+}
+
+Note.removeTags = function (s) {
+  return s.replace(/<[^>]+>/g, "");
+}
+
+Note.unescapeHtml = function (s) {
+  // Thanks to CMS stackoverflow user for this treak:
+  // http://stackoverflow.com/questions/1912501/unescape-html-entities-in-javascript
+  var e = document.createElement('div');
+  e.innerHTML = s;
+  return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+}
+
+Note.prototype.title = function () {
+  var tags = this.splitByBlocks();
+  if (tags.length == 0) return "";
+  return Note.unescapeHtml(Note.removeTags(tags[0]));
+};
+
+Note.prototype.bodyPreview = function () {
+  var tags = this.splitByBlocks();
+  if (tags.length < 2) return "";
+
+  var bodyWithTags = tags.slice(1).join("\n");
+  // Special case: <li> is nested inside <ul> or <ol> therefore its content
+  // wouldn't be broken into lines with `join` above.
+  bodyWithTags = bodyWithTags.replace("</li>", "\n");
+
+  return Note.unescapeHtml(Note.removeTags(bodyWithTags));
+};
+
 var NotesList = function (raw) {
   if (!raw) raw = [];
 

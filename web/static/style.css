@@ -102,14 +102,23 @@
   flex-grow: 0;
   flex-shrink: 0;
   padding: 14px;
-  height: 48px;
+  height: 88px;
   border-bottom: 1px solid #cdcdcd;
   cursor: pointer;
   user-select: none;
 
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.notes-editor .sidebar ul.notes-list li .title {
+  font-weight: bold;
+  margin-bottom: 6px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.notes-editor .sidebar ul.notes-list li .body {
+  color: #6f6f6f;
+  overflow: hidden;
 }
 .notes-editor .sidebar ul.notes-list li:not(.selected):hover {
   background-color: #f4f4f4;
