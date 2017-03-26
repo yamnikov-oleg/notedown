@@ -1,4 +1,6 @@
-from flask import Flask
+from datetime import timedelta
+
+from flask import Flask, session
 
 import config
 from . import api, pages
@@ -12,3 +14,11 @@ app.secret_key = config.SECRET_KEY
 
 app.register_blueprint(pages.pages)
 app.register_blueprint(api.apiv1)
+
+app.config.update(
+    PERMANENT_SESSION_LIFETIME = timedelta(days=365),
+)
+
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
