@@ -27,7 +27,7 @@ def serialize_note(note):
         'text': note.text,
         'rendered': note.render(),
         'creation_time': note.creation_time_obj.isoformat(),
-        'update_time': note.creation_time_obj.isoformat(),
+        'update_time': note.update_time_obj.isoformat(),
     }
 
 @apiv1.route('/notes', methods=['GET'])
