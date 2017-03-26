@@ -12,10 +12,13 @@ import markdown
 
 database = peewee.Proxy()
 
+def utcnow_with_tz():
+    return datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
+
 class Session(peewee.Model):
     id = peewee.CharField(primary_key=True, max_length=255)
     dict_json = peewee.TextField()
-    update_time = peewee.DateTimeField(default=datetime.datetime.now)
+    update_time = peewee.DateTimeField(default=utcnow_with_tz)
 
     @classmethod
     def create(cls, *args, **kwargs):
@@ -72,7 +75,7 @@ class User(peewee.Model):
     username = peewee.CharField(max_length=64, unique=True)
     password = peewee.CharField(max_length=64)
     salt = peewee.CharField(max_length=64)
-    creation_time = peewee.DateTimeField(default=datetime.datetime.now)
+    creation_time = peewee.DateTimeField(default=utcnow_with_tz)
 
     def reset_salt(self):
         def random_char():
@@ -95,9 +98,6 @@ class User(peewee.Model):
 
     class Meta:
         database = database
-
-def utcnow_with_tz():
-    return datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
 
 class Note(peewee.Model):
     author = peewee.ForeignKeyField(User, related_name='notes')
