@@ -417,6 +417,41 @@ describe("NotesList", function () {
 
   });
 
+  describe("#sortedByUpdateTime()", function () {
+
+    it("should return a list of notes sorted by update_time in desc order", function () {
+      var list = new NotesList([
+        { id: 1, update_time: new Date(2017, 2, 26, 17, 23) },
+        { id: 2, update_time: new Date(2017, 2, 26, 17, 22) },
+        { id: 3, update_time: new Date(2017, 2, 26, 17, 24) },
+      ]);
+
+      var sorted = list.sortedByUpdateTime();
+
+      assert.lengthOf(sorted, 3);
+      sorted.forEach(function (n) { assert.instanceOf(n, Note) });
+      assert.equal(sorted[0].id, 3);
+      assert.equal(sorted[1].id, 1);
+      assert.equal(sorted[2].id, 2);
+    });
+
+    it("should not touch underlying array", function () {
+      var list = new NotesList([
+        { id: 1, update_time: new Date(2017, 2, 26, 17, 23) },
+        { id: 2, update_time: new Date(2017, 2, 26, 17, 22) },
+        { id: 3, update_time: new Date(2017, 2, 26, 17, 24) },
+      ]);
+
+      list.sortedByUpdateTime();
+
+      assert.lengthOf(list._notes, 3);
+      assert.equal(list._notes[0].id, 1);
+      assert.equal(list._notes[1].id, 2);
+      assert.equal(list._notes[2].id, 3);
+    });
+
+  });
+
 });
 
 var AccountMockAPI = function (accountData, password, loggedIn) {

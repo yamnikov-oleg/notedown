@@ -326,6 +326,14 @@ NotesList.prototype.asArray = function () {
   return this._notes;
 }
 
+NotesList.prototype.sortedByUpdateTime = function () {
+  var arr = this.asArray().slice();
+  arr.sort(function (a, b) {
+    return -(a.update_time.getTime() - b.update_time.getTime());
+  });
+  return arr;
+}
+
 var Account = function (data) {
   this.username = data.username;
 }

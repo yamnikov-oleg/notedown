@@ -17,13 +17,11 @@ SelectableNotesList.prototype.deselect = function () {
     this.list.delete(this.selected);
   }
 
-  this.save();
   this.selected = null;
   this.isEditing = false;
 };
 
 SelectableNotesList.prototype.select = function (note) {
-  this.save();
   this.selected = note;
   this.isEditing = false;
 };
@@ -89,4 +87,8 @@ SelectableNotesList.prototype.remove = function (note) {
 
 SelectableNotesList.prototype.asArray = function () {
   return this.list.asArray();
+};
+
+SelectableNotesList.prototype.sortedByUpdateTime = function () {
+  return this.list.sortedByUpdateTime();
 };
