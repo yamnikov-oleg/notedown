@@ -1,6 +1,7 @@
 import json
 import unittest
 
+import dateutil.parser
 from flask import url_for
 
 import migrations
@@ -36,6 +37,9 @@ class APIv1NotesTestCase(unittest.TestCase):
             self._test_mut_notes.append(note)
 
     def assert_note_json(self, d, note):
+        """
+        Assert that provided json dictionary `d` describes the provided `note` model.
+        """
         self.assertIn('id', d)
         self.assertEqual(d['id'], note.id)
 
@@ -44,6 +48,14 @@ class APIv1NotesTestCase(unittest.TestCase):
 
         self.assertIn('rendered', d)
         self.assertEqual(d['rendered'], note.render())
+
+        self.assertIn('creation_time', d)
+        self.assertEqual(d['creation_time'], note.creation_time_obj.isoformat())
+
+        self.assertIn('update_time', d)
+        # We won't compare the update_time field since it might be out of sync.
+        # But we'll try to parse to ensure it is a valid datetime string.
+        dateutil.parser.parse(d['update_time'])
 
     def test_index_unauth(self):
         app = web.app.test_client()

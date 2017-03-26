@@ -5,9 +5,11 @@ import random
 import string
 import uuid
 
+import dateutil.parser
 import peewee
 from playhouse.shortcuts import RetryOperationalError
 
+import config
 import markdown
 
 database = peewee.Proxy()
@@ -107,6 +109,26 @@ class Note(peewee.Model):
 
     def render(self):
         return markdown.render(self.text)
+
+    @property
+    def creation_time_obj(self):
+        using_sqlite = config.DATABASE.get('BACKEND') == 'sqlite'
+        is_datetime_instance = isinstance(self.creation_time, datetime.datetime)
+
+        if using_sqlite and not is_datetime_instance:
+            return dateutil.parser.parse(self.creation_time)
+        else:
+            return self.creation_time
+
+    @property
+    def update_time_obj(self):
+        using_sqlite = config.DATABASE.get('BACKEND') == 'sqlite'
+        is_datetime_instance = isinstance(self.update_time, datetime.datetime)
+
+        if using_sqlite and not is_datetime_instance:
+            return dateutil.parser.parse(self.update_time)
+        else:
+            return self.update_time
 
     def save(self, *args, **kwargs):
         self.update_time = utcnow_with_tz()
