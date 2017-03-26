@@ -96,17 +96,20 @@ class User(peewee.Model):
     class Meta:
         database = database
 
+def utcnow_with_tz():
+    return datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
+
 class Note(peewee.Model):
     author = peewee.ForeignKeyField(User, related_name='notes')
     text = peewee.TextField(verbose_name="Text")
-    creation_time = peewee.DateTimeField(default=datetime.datetime.now)
-    update_time = peewee.DateTimeField(default=datetime.datetime.now)
+    creation_time = peewee.DateTimeField(default=utcnow_with_tz)
+    update_time = peewee.DateTimeField(default=utcnow_with_tz)
 
     def render(self):
         return markdown.render(self.text)
 
     def save(self, *args, **kwargs):
-        self.update_time = datetime.datetime.now()
+        self.update_time = utcnow_with_tz()
         return super().save(*args, **kwargs)
 
     class Meta:
