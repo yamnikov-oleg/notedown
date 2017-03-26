@@ -38,6 +38,7 @@
   background-color: #ececec;
 }
 .note-rendered code {
+  display: inline;
   padding: 4px;
   border-radius: 2px;
 }
