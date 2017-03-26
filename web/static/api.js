@@ -329,7 +329,11 @@ NotesList.prototype.asArray = function () {
 NotesList.prototype.sortedByUpdateTime = function () {
   var arr = this.asArray().slice();
   arr.sort(function (a, b) {
-    return -(a.update_time.getTime() - b.update_time.getTime());
+    var utDiff = a.update_time.getTime() - b.update_time.getTime();
+    if (utDiff != 0) return -utDiff;
+
+    var ctDiff = a.creation_time.getTime() - b.creation_time.getTime();
+    return -ctDiff;
   });
   return arr;
 }

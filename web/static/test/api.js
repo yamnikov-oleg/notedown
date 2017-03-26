@@ -450,6 +450,22 @@ describe("NotesList", function () {
       assert.equal(list._notes[2].id, 3);
     });
 
+    it("should order by creation_time if update_time's are equal", function () {
+      var list = new NotesList([
+        { id: 1, update_time: new Date(2017, 2, 26, 17, 24), creation_time: new Date(2017, 2, 26, 17, 23) },
+        { id: 2, update_time: new Date(2017, 2, 26, 17, 24), creation_time: new Date(2017, 2, 26, 17, 22) },
+        { id: 3, update_time: new Date(2017, 2, 26, 17, 24), creation_time: new Date(2017, 2, 26, 17, 24) },
+      ]);
+
+      var sorted = list.sortedByUpdateTime();
+
+      assert.lengthOf(sorted, 3);
+      sorted.forEach(function (n) { assert.instanceOf(n, Note) });
+      assert.equal(sorted[0].id, 3);
+      assert.equal(sorted[1].id, 1);
+      assert.equal(sorted[2].id, 2);
+    });
+
   });
 
 });
