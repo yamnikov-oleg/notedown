@@ -95,6 +95,14 @@ var Note = function (fields) {
   this.rendered = fields.rendered;
   this.isBeingSaved = false;
   this.isBeingDeleted = false;
+
+  if (fields.creation_time) {
+    this.creation_time = new Date(fields.creation_time);
+  }
+
+  if (fields.update_time) {
+    this.update_time = new Date(fields.update_time);
+  }
 }
 
 Note.prototype.is = function (other) {
@@ -127,6 +135,8 @@ Note.prototype.save = function (opts) {
     NotedownAPI.notes.create(this, function (json) {
       _this.id = json.id;
       if (opts.rerender) _this.rendered = json.rendered;
+      if (json.creation_time) _this.creation_time = new Date(json.creation_time);
+      if (json.update_time) _this.update_time = new Date(json.update_time);
       _this.isBeingSaved = false;
     }, function (code, msg) {
       console.log("Error creating note: " + code + " - " + msg);
@@ -136,6 +146,7 @@ Note.prototype.save = function (opts) {
     var _this = this;
     NotedownAPI.notes.update(this, function (json) {
       if (opts.rerender) _this.rendered = json.rendered;
+      if (json.update_time) _this.update_time = new Date(json.update_time);
       _this.isBeingSaved = false;
     }, function (code, msg) {
       console.log("Error updating note " + _this.id + ": " + code + " - " + msg);
@@ -296,6 +307,10 @@ NotesList.prototype.delete = function (note) {
 
 NotesList.prototype.new = function (opts) {
   var note = new Note(opts);
+
+  note.creation_time = new Date();
+  note.update_time = new Date();
+
   this._notes.unshift(note);
   return note;
 }

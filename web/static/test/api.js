@@ -9,21 +9,39 @@ NotesMockAPI.prototype.index = function (success, fail) {
 NotesMockAPI.prototype.create = function (note, success, fail) {
   note = _.clone(note);
   this.data.push(note);
+
   note.id = this.data.length;
-  success({ id: note.id, text: note.text, rendered: note.text });
+  note.creation_time = new Date().toISOString();
+  note.update_time = new Date().toISOString();
+
+  success({
+    id: note.id,
+    text: note.text,
+    rendered: note.text,
+    creation_time: note.creation_time,
+    update_time: note.update_time,
+  });
 };
 
 NotesMockAPI.prototype.update = function (note, success, fail) {
-  var updated = false;
+  var updated = null;
   for (var i in this.data) {
     if (this.data[i].id == note.id) {
-      this.data[i] = _.clone(note);
-      updated = true;
+      updated = this.data[i];
+      updated.text = note.text;
+      updated.update_time = new Date();
       break;
     }
   }
+
   if (!updated) throw new Error("Attempt to update non-existant note " + note.id);
-  success({ id: note.id, text: note.text, rendered: note.text });
+
+  success({
+    id: updated.id,
+    text: updated.text,
+    rendered: updated.text,
+    update_time: updated.update_time,
+  });
 };
 
 NotesMockAPI.prototype.delete = function (note, success, fail) {
@@ -55,6 +73,38 @@ NotesFailAPI.prototype.update = function (_, _, fail) { this.fail(fail); }
 NotesFailAPI.prototype.delete = function (_, _, fail) { this.fail(fail); }
 
 describe('Note', function () {
+
+  describe('constructor(data)', function () {
+
+    it("should parse creation_time field if it's provided", function () {
+      var noteData = { id: 1, text: "123", creation_time: "2017-03-26T11:38:00+00:00" };
+
+      var note = new Note(noteData);
+
+      assert.instanceOf(note.creation_time, Date);
+      assert.equal(note.creation_time.getUTCFullYear(), 2017);
+      assert.equal(note.creation_time.getUTCMonth(), 2);
+      assert.equal(note.creation_time.getUTCDate(), 26);
+      assert.equal(note.creation_time.getUTCHours(), 11);
+      assert.equal(note.creation_time.getUTCMinutes(), 38);
+      assert.equal(note.creation_time.getUTCSeconds(), 00);
+    });
+
+    it("should parse update_time field if it's provided", function () {
+      var noteData = { id: 1, text: "123", update_time: "2017-03-26T11:38:00+00:00" };
+
+      var note = new Note(noteData);
+
+      assert.instanceOf(note.update_time, Date);
+      assert.equal(note.update_time.getUTCFullYear(), 2017);
+      assert.equal(note.update_time.getUTCMonth(), 2);
+      assert.equal(note.update_time.getUTCDate(), 26);
+      assert.equal(note.update_time.getUTCHours(), 11);
+      assert.equal(note.update_time.getUTCMinutes(), 38);
+      assert.equal(note.update_time.getUTCSeconds(), 00);
+    });
+
+  });
 
   describe('#save()', function () {
 
@@ -106,6 +156,34 @@ describe('Note', function () {
       note.save();
 
       assert.equal(note.text, window.NotedownAPI.notes.data[0].text);
+    });
+
+    it("should set timestamps with server response on creating", function () {
+      var noteData = { text: "123" };
+      var note = new Note(noteData);
+      window.NotedownAPI = { notes: new NotesMockAPI() };
+
+      note.save();
+
+      var serverNote = window.NotedownAPI.notes.data[0];
+      assert.instanceOf(note.creation_time, Date);
+      assert.equal(note.creation_time.getTime(), new Date(serverNote.creation_time).getTime());
+
+      assert.instanceOf(note.update_time, Date);
+      assert.equal(note.update_time.getTime(), new Date(serverNote.update_time).getTime());
+    });
+
+    it("should set update_time field with server response on updating", function () {
+      var noteData = { id: 1, text: "123" };
+      var note = new Note(noteData);
+      window.NotedownAPI = { notes: new NotesMockAPI([ noteData ]) };
+
+      note.text = "456";
+      note.save();
+
+      var serverNote = window.NotedownAPI.notes.data[0];
+      assert.instanceOf(note.update_time, Date);
+      assert.equal(note.update_time.getTime(), new Date(serverNote.update_time).getTime());
     });
 
   });
@@ -256,6 +334,30 @@ describe("NotesList", function () {
       assert.equal(list.length(), 1);
       assert.equal(list.get(0), note);
       assert.equal(note.text, "test");
+    });
+
+    it("should set creation_time and update_time fields if not data is provided", function () {
+      var list = new NotesList();
+
+      var note = list.new();
+
+      var now = new Date();
+      assert.instanceOf(note.creation_time, Date);
+      assert.isBelow(now - note.creation_time, 1000);
+      assert.instanceOf(note.update_time, Date)
+      assert.isBelow(now - note.update_time, 1000);
+    });
+
+    it("should set creation_time and update_time fields if data is provided", function () {
+      var list = new NotesList();
+
+      var note = list.new({ text: "test" });
+
+      var now = new Date();
+      assert.instanceOf(note.creation_time, Date);
+      assert.isBelow(now - note.creation_time, 1000);
+      assert.instanceOf(note.update_time, Date)
+      assert.isBelow(now - note.update_time, 1000);
     });
 
   });
