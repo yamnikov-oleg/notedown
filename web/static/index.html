@@ -16,7 +16,7 @@
     </script>
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
 
-    <link rel="stylesheet" href="/static/style.css?v4">
+    <link rel="stylesheet" href="/static/style.css?v5">
     <link rel="stylesheet" href="/static/note-rendered.css?v4">
     <script src="/static/api.js?v7"></script>
     <script src="/static/abstract-ui.js?v2"></script>
@@ -43,6 +43,9 @@
                    title="Сохранение не удалось. Кликните, чтобы попробовать снова."
                    class="fa fa-exclamation-triangle error-icon"
                    v-on:click="note.save()"></i>
+                <transition name="fade">
+                  <i v-if="!note.isBeingSaved && !note.saveError" class="fa fa-check success-icon"></i>
+                </transition>
               </div>
               <p class="body">{{ note.bodyPreview() }}</p>
             </li>

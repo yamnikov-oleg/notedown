@@ -130,6 +130,25 @@
 .notes-editor .sidebar ul.notes-list li .status .error-icon {
   color: rgb(224, 83, 34);
 }
+.notes-editor .sidebar ul.notes-list li .status .success-icon {
+  color: rgba(0, 0, 0, 0.3);
+  opacity: 0;
+}
+.notes-editor .sidebar ul.notes-list li .status .success-icon.fade-enter-active {
+  transition: opacity 1s;
+}
+.notes-editor .sidebar ul.notes-list li .status .success-icon.fade-enter {
+  opacity: 1;
+}
+.notes-editor .sidebar ul.notes-list li .status .success-icon.fade-leave-active,
+.notes-editor .sidebar ul.notes-list li .status .success-icon.fade-leave-to {
+  /*
+    So it wouldn't push the loading icon in the frame
+    when note started saving and loading icon has appeared
+    but success icon is not yet gone from the DOM.
+  */
+  display: none;
+}
 .notes-editor .sidebar ul.notes-list li .body {
   color: #6f6f6f;
   overflow: hidden;
