@@ -186,6 +186,68 @@ describe('Note', function () {
       assert.equal(note.update_time.getTime(), new Date(serverNote.update_time).getTime());
     });
 
+    it("should set isBeingSaved flag while saving and reset it after success", function () {
+      var noteData = { id: 1, text: "123" };
+      var note = new Note(noteData);
+      var successCallback;
+      window.NotedownAPI.notes.update = function (note, success, failure) {
+        successCallback = success;
+      };
+
+      assert.equal(note.isBeingSaved, false);
+
+      note.text = "456";
+      note.save();
+      assert.equal(note.isBeingSaved, true);
+
+      successCallback({ id: 1, text: "123" });
+      assert.equal(note.isBeingSaved, false);
+    });
+
+    it("should set isBeingSaved flag while saving and reset it after failure", function () {
+      var noteData = { id: 1, text: "123" };
+      var note = new Note(noteData);
+      var failureCallback;
+      window.NotedownAPI.notes.update = function (note, success, failure) {
+        failureCallback = failure;
+      };
+
+      assert.equal(note.isBeingSaved, false);
+
+      note.text = "456";
+      note.save();
+      assert.equal(note.isBeingSaved, true);
+
+      failureCallback(500, "Test-induced error");
+      assert.equal(note.isBeingSaved, false);
+    });
+
+    it("should set saveError field on error", function() {
+      var noteData = { id: 1, text: "123" };
+      var note = new Note(noteData);
+      window.NotedownAPI = { notes: new NotesFailAPI(333, "Test-induced error") };
+
+      assert.isNotOk(note.saveError);
+
+      note.text = "456";
+      note.save();
+      assert.isObject(note.saveError);
+      assert.equal(note.saveError.code, 333);
+      assert.equal(note.saveError.msg, "Test-induced error");
+    });
+
+    it("should reset saveError after successful save", function () {
+      var noteData = { id: 1, text: "123" };
+      var note = new Note(noteData);
+      note.saveError = { code: 333, msg: "Test-induced error" };
+      window.NotedownAPI = { notes: new NotesMockAPI([noteData]) };
+
+      note.text = "456";
+      note.save();
+
+      assert.isNotOk(note.saveError);
+    });
+
   });
 
   describe("#delete()", function () {

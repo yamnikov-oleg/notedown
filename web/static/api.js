@@ -131,6 +131,7 @@ Note.prototype.save = function (opts) {
   this.isBeingSaved = true;
 
   if (this.isNew()) {
+
     var _this = this;
     NotedownAPI.notes.create(this, function (json) {
       _this.id = json.id;
@@ -138,20 +139,29 @@ Note.prototype.save = function (opts) {
       if (json.creation_time) _this.creation_time = new Date(json.creation_time);
       if (json.update_time) _this.update_time = new Date(json.update_time);
       _this.isBeingSaved = false;
+      _this.saveError = null;
+
     }, function (code, msg) {
       console.log("Error creating note: " + code + " - " + msg);
       _this.isBeingSaved = false;
+      _this.saveError = { code: code, msg: msg };
     });
+
   } else {
+
     var _this = this;
     NotedownAPI.notes.update(this, function (json) {
       if (opts.rerender) _this.rendered = json.rendered;
       if (json.update_time) _this.update_time = new Date(json.update_time);
       _this.isBeingSaved = false;
+      _this.saveError = null;
+
     }, function (code, msg) {
       console.log("Error updating note " + _this.id + ": " + code + " - " + msg);
       _this.isBeingSaved = false;
+      _this.saveError = { code: code, msg: msg };
     });
+
   }
 };
 

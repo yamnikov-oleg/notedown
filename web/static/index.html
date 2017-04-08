@@ -16,9 +16,9 @@
     </script>
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
 
-    <link rel="stylesheet" href="/static/style.css?v3">
+    <link rel="stylesheet" href="/static/style.css?v4">
     <link rel="stylesheet" href="/static/note-rendered.css?v4">
-    <script src="/static/api.js?v6"></script>
+    <script src="/static/api.js?v7"></script>
     <script src="/static/abstract-ui.js?v2"></script>
   </head>
   <body>
@@ -37,6 +37,13 @@
                 v-bind:class="{ selected: notes.isSelected(note) }"
                 v-on:click="notes.select(note)">
               <p class="title">{{ note.title() }}</p>
+              <div class="status">
+                <i v-if="note.isBeingSaved" class="fa fa-circle-o-notch fa-spin loading-icon"></i>
+                <i v-else-if="note.saveError"
+                   title="Сохранение не удалось. Кликните, чтобы попробовать снова."
+                   class="fa fa-exclamation-triangle error-icon"
+                   v-on:click="note.save()"></i>
+              </div>
               <p class="body">{{ note.bodyPreview() }}</p>
             </li>
           </ul>

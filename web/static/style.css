@@ -99,6 +99,7 @@
   overflow-y: scroll;
 }
 .notes-editor .sidebar ul.notes-list li {
+  position: relative;
   flex-grow: 0;
   flex-shrink: 0;
   padding: 14px;
@@ -112,9 +113,22 @@
 }
 .notes-editor .sidebar ul.notes-list li .title {
   font-weight: bold;
+  margin-right: 26px;
   margin-bottom: 6px;
   overflow: hidden;
   white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.notes-editor .sidebar ul.notes-list li .status {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+}
+.notes-editor .sidebar ul.notes-list li .status .loading-icon {
+  color: rgba(0, 0, 0, 0.3);
+}
+.notes-editor .sidebar ul.notes-list li .status .error-icon {
+  color: rgb(224, 83, 34);
 }
 .notes-editor .sidebar ul.notes-list li .body {
   color: #6f6f6f;
