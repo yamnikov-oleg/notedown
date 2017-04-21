@@ -4,6 +4,9 @@
   box-sizing: border-box;
   font-family: 'Open Sans', sans-serif;
 }
+body {
+  background-color: #f2eee4;
+}
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Merriweather', serif;
 }
@@ -27,9 +30,10 @@ button {
   width: 47px;
   outline: none;
   cursor: pointer;
+  color: rgba(0, 0, 0, 0.6);
 }
 .toolbar button:active {
-  background-color: #d9d9d9;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 #app {
@@ -92,12 +96,15 @@ button {
   flex-grow: 0;
   flex-shrink: 0;
   width: 320px;
-  border-right: 1px solid gray;
+  border-right: 2px solid #785e4d;
 }
 .notes-editor .sidebar .toolbar {
   flex-grow: 0;
   flex-shrink: 0;
-  border-bottom: 1px solid gray;
+  background-color: #785e4d;
+}
+.notes-editor .sidebar .toolbar button {
+  color: #c3b3a9;
 }
 .notes-editor .sidebar ul.notes-list {
   flex-grow: 1;
@@ -112,7 +119,7 @@ button {
   flex-shrink: 0;
   padding: 14px;
   height: 88px;
-  border-bottom: 1px solid #cdcdcd;
+  border-bottom: 1px solid #d2c7aa;
   cursor: pointer;
   user-select: none;
 
@@ -165,10 +172,11 @@ button {
   max-height: 36px;
 }
 .notes-editor .sidebar ul.notes-list li:not(.selected):hover {
-  background-color: #f4f4f4;
+  background-color: #d2c7aa;
 }
 .notes-editor .sidebar ul.notes-list li.selected {
-  background-color: #e8e8e8;
+  background-color: #baaf92;
+  border-color: #baaf92;
 }
 
 .notes-editor main {
@@ -180,7 +188,7 @@ button {
 .notes-editor main .toolbar-wrap {
   flex-grow: 0;
   flex-shrink: 0;
-  border-bottom: 1px solid gray;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   height: 48px;
 }
 .notes-editor main .editor {
@@ -194,6 +202,7 @@ button {
   border: none;
   outline: none;
   font-family: monospace;
+  background-color: rgba(255, 255, 255, 0.5);
 }
 .notes-editor main .note-rendered {
   flex-grow: 1;
@@ -206,7 +215,7 @@ button {
   flex-direction: row;
   align-items: center;
   padding: 6px;
-  background-color: black;
+  background-color: #0d0602;
   color: white;
   font-size: 12px;
 }
