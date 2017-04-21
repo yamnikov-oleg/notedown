@@ -2,8 +2,12 @@
   padding: 40px;
   line-height: 1.5;
   word-break: break-word;
+  font-size: 14px;
 }
 
+.note-rendered h1, h2, h3, h4, h5, h6 {
+  font-family: 'Merriweather', serif;
+}
 .note-rendered h1 {
   margin-bottom: 16px;
 }

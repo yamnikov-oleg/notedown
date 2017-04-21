@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <title>Notedown (&alpha;)</title>
     <link rel="shortcut icon" href="/static/icon.png?v1" type="image/png">
+    <!-- Google Fonts: Open Sans and Merriweather -->
+    <link href="https://fonts.googleapis.com/css?family=Merriweather:300,300i,400,400i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&amp;subset=cyrillic" rel="stylesheet">
 
     <link rel="stylesheet" href="/static/fa/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/deps/highlightjs/github.css">
@@ -16,8 +18,8 @@
     </script>
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
 
-    <link rel="stylesheet" href="/static/style.css?v5">
-    <link rel="stylesheet" href="/static/note-rendered.css?v5">
+    <link rel="stylesheet" href="/static/style.css?v6">
+    <link rel="stylesheet" href="/static/note-rendered.css?v6">
     <script src="/static/api.js?v7"></script>
     <script src="/static/abstract-ui.js?v2"></script>
   </head>
@@ -78,8 +80,8 @@
           <h2>Please, log in using the form below</h2>
           <input type="text" class="username-input" v-model="username">
           <input type="password" class="password-input" v-model="password">
-          <p class="error-message">
-            <i v-if="errorMessage" class="fa fa-remove"></i>
+          <p v-if="errorMessage" class="error-message">
+            <i class="fa fa-remove"></i>
             {{ errorMessage }}
           </p>
           <button v-on:click="submit">Log in</button>

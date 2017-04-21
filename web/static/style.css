@@ -2,6 +2,13 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  font-family: 'Open Sans', sans-serif;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Merriweather', serif;
+}
+button {
+  font-family: 'Open Sans', sans-serif;
 }
 
 .toolbar {
@@ -66,9 +73,9 @@
   font-size: 14pt;
 }
 .login-form .error-message {
-  height: 24px;
   text-align: center;
   color: rgb(201, 39, 22);
+  font-size: 14px;
 }
 .login-form button {
   font-size: 14pt;
@@ -83,6 +90,7 @@
   display: flex;
   flex-direction: column;
   flex-grow: 0;
+  flex-shrink: 0;
   width: 320px;
   border-right: 1px solid gray;
 }
@@ -107,6 +115,8 @@
   border-bottom: 1px solid #cdcdcd;
   cursor: pointer;
   user-select: none;
+
+  font-size: 14px;
 
   overflow: hidden;
   text-overflow: ellipsis;
@@ -183,6 +193,7 @@
   resize: none;
   border: none;
   outline: none;
+  font-family: monospace;
 }
 .notes-editor main .note-rendered {
   flex-grow: 1;
@@ -194,17 +205,17 @@
   flex-grow: 0;
   flex-direction: row;
   align-items: center;
-  height: 32px;
   padding: 6px;
   background-color: black;
   color: white;
+  font-size: 12px;
 }
 .bottom-bar .spacer {
   flex-grow: 1;
 }
 .bottom-bar h1 {
   display: block;
-  font-size: 12pt;
+  font-size: 12px;
 }
 .bottom-bar .username-display {
   margin-right: 12px;
@@ -216,4 +227,5 @@
   color: white;
   cursor: pointer;
   text-decoration: underline;
+  font-size: 12px;
 }
