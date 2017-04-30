@@ -5,13 +5,25 @@
   font-family: 'Open Sans', sans-serif;
 }
 body {
-  background-color: #f2eee4;
+  background-color: #f9f2d7;
 }
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Merriweather', serif;
 }
 button {
   font-family: 'Open Sans', sans-serif;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+}
+*::-webkit-scrollbar-track {
+  background-color: inherit;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  max-height: 50px;
 }
 
 .toolbar {
@@ -26,8 +38,9 @@ button {
   flex-grow: 0;
   background: none;
   border: none;
-  font-size: 14pt;
-  width: 47px;
+  font-size: 18px;
+  text-align: center;
+  width: 48px;
   outline: none;
   cursor: pointer;
   color: rgba(0, 0, 0, 0.6);
@@ -96,15 +109,15 @@ button {
   flex-grow: 0;
   flex-shrink: 0;
   width: 320px;
-  border-right: 2px solid #785e4d;
+  border-right: 1px solid #21294c;
 }
 .notes-editor .sidebar .toolbar {
   flex-grow: 0;
   flex-shrink: 0;
-  background-color: #785e4d;
+  background-color: #21294c;
 }
 .notes-editor .sidebar .toolbar button {
-  color: #c3b3a9;
+  color: rgba(255, 255, 255, 0.8);
 }
 .notes-editor .sidebar ul.notes-list {
   flex-grow: 1;
@@ -119,7 +132,7 @@ button {
   flex-shrink: 0;
   padding: 14px;
   height: 88px;
-  border-bottom: 1px solid #d2c7aa;
+  border-bottom: 1px solid #f2dea8;
   cursor: pointer;
   user-select: none;
 
@@ -145,7 +158,7 @@ button {
   color: rgba(0, 0, 0, 0.3);
 }
 .notes-editor .sidebar ul.notes-list li .status .error-icon {
-  color: rgb(224, 83, 34);
+  color: rgb(201, 39, 22);
 }
 .notes-editor .sidebar ul.notes-list li .status .success-icon {
   color: rgba(0, 0, 0, 0.3);
@@ -172,14 +185,15 @@ button {
   max-height: 36px;
 }
 .notes-editor .sidebar ul.notes-list li:not(.selected):hover {
-  background-color: #d2c7aa;
+  background-color: rgb(247, 237, 202);
 }
 .notes-editor .sidebar ul.notes-list li.selected {
-  background-color: #baaf92;
-  border-color: #baaf92;
+  background-color: rgb(245, 232, 190);
+  border-color: #f2dea8;
 }
 
 .notes-editor main {
+  background-color: rgb(249, 242, 215);
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -201,8 +215,8 @@ button {
   resize: none;
   border: none;
   outline: none;
-  font-family: monospace;
-  background-color: rgba(255, 255, 255, 0.5);
+  font-family: 'PT Mono', monospace;
+  background-color: rgba(255, 255, 255, 0.3);
 }
 .notes-editor main .note-rendered {
   flex-grow: 1;
@@ -216,7 +230,7 @@ button {
   flex-direction: row;
   align-items: center;
   padding: 6px;
-  background-color: #0d0602;
+  background-color: #0c101d;
   color: white;
   font-size: 12px;
 }
