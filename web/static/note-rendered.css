@@ -27,7 +27,8 @@
   margin-bottom: 16px;
 }
 
-.note-rendered p, .note-rendered ul, .note-rendered ol, .note-rendered pre {
+.note-rendered p, .note-rendered ul, .note-rendered ol,
+.note-rendered pre, .note-rendered hr {
   margin-bottom: 16px;
 }
 .note-rendered ul, .note-rendered ol {
@@ -39,6 +40,11 @@
 .note-rendered li ul, .note-rendered li ol {
   margin-top: 4px;
   margin-bottom: 0px;
+}
+
+.note-rendered hr {
+  border: 1px solid rgba(0,0,0,0.25);
+  border-bottom: none;
 }
 
 .note-rendered code, .note-rendered pre, .note-rendered code * {
