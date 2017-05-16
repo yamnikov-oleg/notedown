@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Notedown (&alpha;)</title>
-    <link rel="shortcut icon" href="/static/icon.png?v2" type="image/png">
+    <link rel="shortcut icon" href="/static/icon.png" type="image/png">
     <!-- Google Fonts: Open Sans, Merriweather, PT Mono -->
     <link href="https://fonts.googleapis.com/css?family=Merriweather:400,400i,700,700i&amp;subset=cyrillic" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i&amp;subset=cyrillic" rel="stylesheet">
@@ -20,10 +20,10 @@
     </script>
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
 
-    <link rel="stylesheet" href="/static/style.css?v10">
-    <link rel="stylesheet" href="/static/note-rendered.css?v9">
-    <script src="/static/api.js?v7"></script>
-    <script src="/static/abstract-ui.js?v2"></script>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/note-rendered.css">
+    <script src="/static/api.js"></script>
+    <script src="/static/abstract-ui.js"></script>
   </head>
   <body>
 
@@ -110,6 +110,6 @@
       <bottom-bar v-if="loggedIn == true" v-bind:account="account" v-on:logout="logout"></bottom-bar>
     </div>
 
-    <script src="/static/ui.js?v2"></script>
+    <script src="/static/ui.js"></script>
   </body>
 </html>
