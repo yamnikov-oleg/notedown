@@ -54,14 +54,17 @@
 .note-rendered code {
   display: inline;
   padding: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 2px;
 }
 
 .note-rendered pre {
+  border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 2px;
 }
 .note-rendered pre code {
   background: none;
+  border: none;
   display: block;
   width: 100%;
   padding: 16px;
