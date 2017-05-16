@@ -1,9 +1,10 @@
+dist: trusty
 language: python
 python: "3.5"
 addons:
   ssh_known_hosts: notedown.oyam.su
 before_install:
-  - sudo apt-get update -qq
+  - curl -sL https://deb.nodesource.com/setup | sudo bash -
   - sudo apt-get install -qq nodejs phantomjs
   - sudo npm install -g mocha-phantomjs
 install:
