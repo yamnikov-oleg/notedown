@@ -10,4 +10,6 @@ COPY . .
 
 EXPOSE 5000
 
-CMD ./main.py migrate && ./main.py server
+CMD ./main.py migrate && \
+    uwsgi --http :5000 \
+          --wsgi-file wsgi.py --callable app
