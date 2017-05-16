@@ -42,6 +42,13 @@
   margin-bottom: 0px;
 }
 
+.note-rendered a {
+  color: #21294c;
+}
+.note-rendered a:active {
+  color: #555d80;
+}
+
 .note-rendered hr {
   border: 1px solid rgba(0,0,0,0.25);
   border-bottom: none;
