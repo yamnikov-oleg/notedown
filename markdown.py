@@ -2,8 +2,7 @@ import re
 
 import mistune
 
-def render(md):
-    rendered = mistune.markdown(md)
+def _render_checkboxes(rendered):
     cb_ind = 0
     while True:
         m = re.search("\[(x| )\]", rendered)
@@ -18,5 +17,13 @@ def render(md):
 
         rendered = rendered[:m.start()] + html + rendered[m.end():]
         cb_ind += 1
+
+    return rendered
+
+def render(md, checkboxes=True):
+    rendered = mistune.markdown(md)
+
+    if checkboxes:
+        rendered = _render_checkboxes(rendered)
 
     return rendered
