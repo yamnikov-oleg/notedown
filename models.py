@@ -108,7 +108,7 @@ class Note(peewee.Model):
     update_time = peewee.DateTimeField(default=utcnow_with_tz)
 
     def render(self):
-        return markdown.render(self.text)
+        return markdown.render(self.text, latex_formulas=True)
 
     @property
     def creation_time_obj(self):

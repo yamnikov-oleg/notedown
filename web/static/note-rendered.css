@@ -88,3 +88,7 @@
 .note-rendered img {
   max-width: 100%;
 }
+
+.note-rendered img.latex-formula {
+  vertical-align: middle;
+}
