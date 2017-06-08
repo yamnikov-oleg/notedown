@@ -10,8 +10,8 @@ before_install:
 install:
   - "pip install -r requirements.txt"
 script:
-  - "scripts/run-backend-tests.sh"
-  - "scripts/run-frontend-tests.sh"
+  - "./main.py test"
+  - "./main.py test-frontend"
 env:
   - SECRET_KEY=kVAhMrjshuSVrZGWV2dj
 before_deploy:

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import sys
 import os.path
 from datetime import datetime
 
@@ -54,6 +55,18 @@ class NotedownCLI:
             'notedown.web.tests',
         ]))
         unittest.TextTestRunner(verbosity=2).run(suite)
+
+    def test_frontend(self):
+        from multiprocessing import Process
+        from subprocess import call
+
+        server_proc = Process(target=self.server, args=('localhost', 5000))
+        server_proc.start()
+
+        exit_code = call(["mocha-phantomjs", "http://localhost:5000/test"])
+
+        server_proc.terminate()
+        sys.exit(exit_code)
 
     def shell(self):
         self._prepare_models()
