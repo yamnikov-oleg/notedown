@@ -102,6 +102,6 @@ ENV/
 *.sqlite3
 
 # Local configuration
-config/local.py
+notedown/config/local.py
 docker-compose.yml
 *.local*
