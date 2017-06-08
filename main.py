@@ -52,6 +52,11 @@ class NotedownCLI:
         ]))
         unittest.TextTestRunner(verbosity=2).run(suite)
 
+    def shell(self):
+        self._prepare_models()
+        from IPython import embed
+        embed()
+
 
 if __name__ == '__main__':
     fire.Fire(NotedownCLI)
