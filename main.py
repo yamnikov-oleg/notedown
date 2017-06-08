@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 import sys
 
-import web
-import migrations
-import models
-import config
+from notedown import web, migrations, models, config
+
 
 if __name__ == '__main__':
     if config.DEBUG:
@@ -32,6 +30,6 @@ if __name__ == '__main__':
         import unittest
         suite = unittest.TestSuite()
         suite.addTest(unittest.defaultTestLoader.loadTestsFromNames([
-            'web.tests',
+            'notedown.web.tests',
         ]))
         unittest.TextTestRunner(verbosity=2).run(suite)

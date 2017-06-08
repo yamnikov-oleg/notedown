@@ -4,9 +4,8 @@ import unittest
 import dateutil.parser
 from flask import url_for
 
-import migrations
-import models
-import web
+from notedown import migrations, models, web
+
 
 class APIv1NotesTestCase(unittest.TestCase):
 

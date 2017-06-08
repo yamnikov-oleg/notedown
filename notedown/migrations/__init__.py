@@ -6,8 +6,7 @@ import os.path
 import peewee
 from playhouse import migrate
 
-import config
-import models
+from notedown import config, models
 
 def list_available():
     all_files = os.listdir(os.path.dirname(__file__))

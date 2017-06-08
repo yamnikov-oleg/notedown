@@ -9,8 +9,7 @@ import dateutil.parser
 import peewee
 from playhouse.shortcuts import RetryOperationalError
 
-import config
-import markdown
+from notedown import config, markdown
 
 database = peewee.Proxy()
 

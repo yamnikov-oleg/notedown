@@ -1,6 +1,6 @@
 from flask import session
 
-from models import Session, User
+from notedown.models import Session, User
 
 def get_session():
     try:

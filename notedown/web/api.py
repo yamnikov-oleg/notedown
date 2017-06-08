@@ -3,7 +3,7 @@ from functools import wraps
 from flask import Blueprint, jsonify, request, url_for
 
 from .auth import get_user, is_authenticated, login, logout
-from models import Note
+from notedown.models import Note
 
 apiv1 = Blueprint('api_v1', __name__, url_prefix='/api/v1')
 
