@@ -45,6 +45,31 @@ class NotedownCLI:
         print("User is created!")
 
     def test(self):
+        from multiprocessing import Process
+
+        print("Performing full testing of the project.")
+
+        print("=== BACKEND TESTS ===")
+        backend_tests = Process(target=self.test_backend)
+        backend_tests.start()
+        backend_tests.join()
+        backend_code = backend_tests.exitcode
+        print("EXIT CODE:", backend_code)
+
+        print("=== FRONTEND TESTS ===")
+        frontend_tests = Process(target=self.test_frontend)
+        frontend_tests.start()
+        frontend_tests.join()
+        frontend_code = frontend_tests.exitcode
+        print("EXIT CODE:", frontend_code)
+
+        if backend_code == 0 and frontend_code == 0:
+            print("TESTS SUCCEEDED.")
+        else:
+            print("TESTS FAILED.")
+            sys.exit(1)
+
+    def test_backend(self):
         print("Creating an in-memory test database...")
         models.connect(BACKEND="sqlite", NAME=":memory:")
         migrations.migrate_db()

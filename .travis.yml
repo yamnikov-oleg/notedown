@@ -11,7 +11,6 @@ install:
   - "pip install -r requirements.txt"
 script:
   - "./main.py test"
-  - "./main.py test-frontend"
 env:
   - SECRET_KEY=kVAhMrjshuSVrZGWV2dj
 before_deploy:
