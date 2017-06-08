@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+import os.path
+from datetime import datetime
+
 import fire
 
 from notedown import web, migrations, models, config
@@ -56,6 +59,13 @@ class NotedownCLI:
         self._prepare_models()
         from IPython import embed
         embed()
+
+    def new_migration(self, name='auto'):
+        stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = "{}_{}.py".format(stamp, name)
+        filepath = os.path.join("notedown", "migrations", filename)
+        print("Creating file '{}'".format(filepath))
+        open(filepath, 'w').close()
 
 
 if __name__ == '__main__':
