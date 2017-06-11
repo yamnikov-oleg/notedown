@@ -7,8 +7,17 @@
 body {
   background-color: #f9f2d7;
 }
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Merriweather', serif;
+h1, h2 {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+}
+h3 {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+}
+h4, h5, h6 {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 700;
 }
 button {
   font-family: 'Open Sans', sans-serif;

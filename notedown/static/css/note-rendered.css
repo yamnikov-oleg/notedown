@@ -5,9 +5,22 @@
   font-size: 14px;
 }
 
-.note-rendered h1, h2, h3, h4, h5, h6 {
-  font-family: 'Merriweather', serif;
+.note-rendered h1, h2 {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
 }
+.note-rendered h3 {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+}
+.note-rendered h4, h5, h6 {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 700;
+}
+/*.note-rendered h3, h4, h5, h6 {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+}*/
 .note-rendered h1 {
   margin-bottom: 20px;
 }
