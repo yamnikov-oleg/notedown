@@ -9,21 +9,23 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i&amp;subset=cyrillic" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=PT+Mono&amp;subset=cyrillic" rel="stylesheet">
 
-    <link rel="stylesheet" href="/static/fa/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/static/deps/highlightjs/github.css">
-    <script src="/static/deps/underscore-min.js"></script>
-    <script src="/static/deps/fetch.js"></script>
-    <script src="/static/deps/highlightjs/highlight.pack.js"></script>
+    <link rel="stylesheet" href="/static/libs/fa/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/libs/highlightjs/github.css">
+    <script src="/static/libs/underscore-min.js"></script>
+    <script src="/static/libs/fetch.js"></script>
+    <script src="/static/libs/highlightjs/highlight.pack.js"></script>
     <script>
       // Disable auto language detection
       hljs.configure({ languages: [] });
     </script>
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
 
-    <link rel="stylesheet" href="/static/style.css">
-    <link rel="stylesheet" href="/static/note-rendered.css">
-    <script src="/static/api.js"></script>
-    <script src="/static/abstract-ui.js"></script>
+    <link rel="stylesheet" href="/static/css/app.css">
+    <link rel="stylesheet" href="/static/css/note-rendered.css">
+    <script src="/static/js/api/api.js"></script>
+    <script src="/static/js/selectable-notes-list.js"></script>
+
+    <script src="/static/js/vue-app.js" defer></script>
   </head>
   <body>
 
@@ -110,6 +112,5 @@
       <bottom-bar v-if="loggedIn == true" v-bind:account="account" v-on:logout="logout"></bottom-bar>
     </div>
 
-    <script src="/static/ui.js"></script>
   </body>
 </html>

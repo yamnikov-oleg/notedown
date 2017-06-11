@@ -2,14 +2,14 @@
   <head>
     <meta charset="utf-8">
     <title>Mocha Tests</title>
-    <link href="/static/test/deps/mocha.css" rel="stylesheet" />
+    <link href="/static/test-libs/mocha.css" rel="stylesheet" />
   </head>
   <body>
     <div id="mocha"></div>
 
-    <script src="/static/deps/underscore-min.js"></script>
-    <script src="/static/test/deps/mocha.js"></script>
-    <script src="/static/test/deps/chai.js"></script>
+    <script src="/static/libs/underscore-min.js"></script>
+    <script src="/static/test-libs/mocha.js"></script>
+    <script src="/static/test-libs/chai.js"></script>
     <script>
       window.assert = chai.assert;
     </script>
@@ -20,8 +20,8 @@
     }
     </script>
     <script>mocha.setup('bdd')</script>
-    <script src="/static/api.js"></script>
-    <script src="/static/test/api.js"></script>
+    <script src="/static/js/api/api.js"></script>
+    <script src="/static/js/api/api-test.js"></script>
     <script>
       mocha.checkLeaks();
       mocha.globals(['jQuery']);

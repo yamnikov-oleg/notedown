@@ -13,4 +13,4 @@ def index():
 if config.DEBUG:
     @pages.route('/test', methods=['GET'])
     def test():
-        return send_file('../static/test/runner.html')
+        return send_file('../static/test-runner.html')
