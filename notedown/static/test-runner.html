@@ -20,8 +20,19 @@
     }
     </script>
     <script>mocha.setup('bdd')</script>
-    <script src="/static/js/api/api.js"></script>
-    <script src="/static/js/api/api-test.js"></script>
+
+    <script src="/static/js/api/ajax-wrapper.js"></script>
+
+    <script src="/static/js/api/account-ajax-mocks.js"></script>
+    <script src="/static/js/api/account.js"></script>
+    <script src="/static/js/api/account-test.js"></script>
+
+    <script src="/static/js/api/note-ajax-mocks.js"></script>
+    <script src="/static/js/api/note.js"></script>
+    <script src="/static/js/api/note-test.js"></script>
+    <script src="/static/js/api/notes-list.js"></script>
+    <script src="/static/js/api/notes-list-test.js"></script>
+
     <script>
       mocha.checkLeaks();
       mocha.globals(['jQuery']);
